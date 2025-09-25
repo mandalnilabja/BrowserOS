@@ -1,6 +1,6 @@
-# Contributing to BrowserOS
+# Contributing to Nemo
 
-Thank you for your interest in contributing to BrowserOS! We welcome contributions from developers of all skill levels. This guide will help you get started with contributing to our AI-powered browser built on Chromium.
+Thank you for your interest in contributing to Nemo! We welcome contributions from developers of all skill levels. This guide will help you get started with contributing to our AI-powered browser built on Chromium.
 
 ## 📋 Table of Contents
 
@@ -46,21 +46,21 @@ For **Chromium browser development** (optional, only if building the full browse
 
 ### Fork and Clone
 
-1. Fork the BrowserOS repository on GitHub
+1. Fork the Nemo repository on GitHub
 2. Clone your forked repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/BrowserOS.git
-   cd BrowserOS
+   git clone https://github.com/YOUR_USERNAME/Nemo.git
+   cd Nemo
    ```
 
 3. Add the upstream remote:
    ```bash
-   git remote add upstream https://github.com/browseros-ai/BrowserOS.git
+   git remote add upstream https://github.com/Nemo-ai/Nemo.git
    ```
 
 ## 🏗️ Project Architecture
 
-BrowserOS consists of two main components:
+Nemo consists of two main components:
 
 ### 1. Chrome Extension (`agent/`)
 The main AI agent that runs as a Chrome extension, providing:
@@ -184,7 +184,7 @@ Before contributing, let's understand how you can help:
 ### 1. 🤖 AI Agent & Tools Development
 **Skill Level:** Intermediate to Advanced | **Impact:** High
 
-The heart of BrowserOS is its AI agent system. You can contribute by:
+The heart of Nemo is its AI agent system. You can contribute by:
 
 - **Creating new tools** for browser automation (see `agent/src/lib/tools/`)
 - **Improving agent planning and execution** logic
@@ -212,7 +212,7 @@ Improve the user interface and experience:
 ### 3. 🧪 Testing & Quality Assurance
 **Skill Level:** Beginner to Intermediate | **Impact:** High
 
-Help ensure BrowserOS is reliable:
+Help ensure Nemo is reliable:
 
 - **Unit tests** with Vitest for individual components
 - **Integration tests** for agent workflows
@@ -223,7 +223,7 @@ Help ensure BrowserOS is reliable:
 ### 4. 📚 Documentation & Examples
 **Skill Level:** Beginner | **Impact:** Medium
 
-Make BrowserOS more accessible:
+Make Nemo more accessible:
 
 - **User guides** and tutorials
 - **API documentation** for tool developers  
@@ -256,7 +256,7 @@ Support the development process:
 ## 🔄 Development Workflow
 
 ### 1. Choose Your Contribution
-- Browse [GitHub Issues](https://github.com/browseros-ai/BrowserOS/issues) or [Good First Issues](https://github.com/browseros-ai/BrowserOS/labels/good%20first%20issue)
+- Browse [GitHub Issues](https://github.com/Nemo-ai/Nemo/issues) or [Good First Issues](https://github.com/Nemo-ai/Nemo/labels/good%20first%20issue)
 - Join our [Discord](https://discord.gg/YKwjt5vuKr) to discuss ideas
 - Check the [contribution areas](#contribution-areas) above
 
@@ -638,11 +638,11 @@ All contributors must sign our Contributor License Agreement:
 
 ### Bug Reports
 
-Use our [bug report template](https://github.com/browseros-ai/BrowserOS/issues/new?template=bug_report.md):
+Use our [bug report template](https://github.com/Nemo-ai/Nemo/issues/new?template=bug_report.md):
 
 **Required Information:**
 - **Clear title**: Describe the issue concisely
-- **Environment**: OS, browser version, BrowserOS version
+- **Environment**: OS, browser version, Nemo version
 - **Steps to reproduce**: Detailed, numbered steps
 - **Expected behavior**: What should happen
 - **Actual behavior**: What actually happens  
@@ -657,7 +657,7 @@ Use our [bug report template](https://github.com/browseros-ai/BrowserOS/issues/n
 **Environment**: 
 - OS: macOS 14.1
 - Browser: Chrome 120.0.6099.109  
-- BrowserOS: v0.1.0
+- Nemo: v0.1.0
 
 **Steps to reproduce:**
 1. Navigate to example.com
@@ -675,7 +675,7 @@ Error: Element not found: button[data-id="new-item"]
 
 ### Feature Requests
 
-Use our [feature request template](https://github.com/browseros-ai/BrowserOS/issues/new?template=feature_request.md):
+Use our [feature request template](https://github.com/Nemo-ai/Nemo/issues/new?template=feature_request.md):
 
 - **Problem description**: What problem does this solve?
 - **Proposed solution**: How should it work?
@@ -722,9 +722,9 @@ We use these labels to organize issues:
   - `#development` - Technical discussions  
   - `#help` - Get assistance
   - `#showcase` - Show off your contributions
-- **[GitHub Issues](https://github.com/browseros-ai/BrowserOS/issues)** - Bug reports and feature requests
-- **[GitHub Discussions](https://github.com/browseros-ai/BrowserOS/discussions)** - Long-form discussions
-- **[Twitter/X](https://twitter.com/browseros_ai)** - Updates and announcements
+- **[GitHub Issues](https://github.com/Nemo-ai/Nemo/issues)** - Bug reports and feature requests
+- **[GitHub Discussions](https://github.com/Nemo-ai/Nemo/discussions)** - Long-form discussions
+- **[Twitter/X](https://twitter.com/Nemo_ai)** - Updates and announcements
 
 ### Getting Help
 
@@ -767,7 +767,7 @@ New to the project? Start with these:
 - Build system improvements
 - Architecture changes
 
-Browse [Good First Issues](https://github.com/browseros-ai/BrowserOS/labels/good%20first%20issue) to get started!
+Browse [Good First Issues](https://github.com/Nemo-ai/Nemo/labels/good%20first%20issue) to get started!
 
 ## 📚 Learning Resources
 
@@ -781,7 +781,7 @@ Browse [Good First Issues](https://github.com/browseros-ai/BrowserOS/labels/good
 - **[LangChain](https://js.langchain.com/docs/)** - LLM integration
 - **[Tailwind CSS](https://tailwindcss.com/)** - Styling
 
-### BrowserOS-Specific Docs
+### Nemo-Specific Docs
 
 - **[Architecture Overview](agent/docs/agent-design-new.md)** - System design
 - **[Build Process](docs/BUILD.md)** - Chromium build guide
@@ -800,7 +800,7 @@ Browse [Good First Issues](https://github.com/browseros-ai/BrowserOS/labels/good
 A: Follow the [Chrome Extension Development](#chrome-extension-development-recommended-for-most-contributors) section above. Most contributors only need the extension setup.
 
 **Q: I'm new to open source. Where should I start?**
-A: Welcome! Start with [Good First Issues](https://github.com/browseros-ai/BrowserOS/labels/good%20first%20issue), join our Discord, and don't hesitate to ask questions.
+A: Welcome! Start with [Good First Issues](https://github.com/Nemo-ai/Nemo/labels/good%20first%20issue), join our Discord, and don't hesitate to ask questions.
 
 **Q: How do I run the extension locally?**
 A: Run `npm run build:dev` in the `agent/` directory, then load the `dist` folder as an unpacked extension in Chrome.
@@ -808,8 +808,8 @@ A: Run `npm run build:dev` in the `agent/` directory, then load the `dist` folde
 **Q: Do I need to build the full Chromium browser?**
 A: No! Most contributors only work on the Chrome extension. Chromium building is only needed for browser-level features.
 
-**Q: What's the difference between BrowserOS and the Chrome extension?**
-A: BrowserOS is the full custom browser. The Chrome extension (in `agent/`) provides the same AI features but runs on regular Chrome.
+**Q: What's the difference between Nemo and the Chrome extension?**
+A: Nemo is the full custom browser. The Chrome extension (in `agent/`) provides the same AI features but runs on regular Chrome.
 
 **Q: How long does code review take?**
 A: We aim for 2-3 business days for most PRs. Complex changes may take longer.
@@ -827,7 +827,7 @@ A: Start with the `agent/src/` directory. The main entry points are `lib/core/Nx
 
 ## 🙏 Thank You
 
-Thank you for your interest in contributing to BrowserOS! We're building the future of AI-powered browsing, and every contribution—whether it's a bug fix, new feature, documentation improvement, or even just feedback—helps make that vision a reality.
+Thank you for your interest in contributing to Nemo! We're building the future of AI-powered browsing, and every contribution—whether it's a bug fix, new feature, documentation improvement, or even just feedback—helps make that vision a reality.
 
 Together, we're creating tools that will transform how people interact with the web. Welcome to the team! 🚀
 

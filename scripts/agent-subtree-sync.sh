@@ -1,7 +1,41 @@
+
+# ------------------ Explanation ------------------
+# This is a bash script called `agent-subtree-sync.sh` that synchronizes updates from a "Nemo-agent" repository into the current repository using Git subtrees. Here's what it does:
+
+# ## Main Purpose
+# The script pulls updates from the Nemo-agent repository into the current repository while preserving the full commit history (no squashing). It appears to be part of a project called "Nemo" that includes the Nemo-agent as a subtree.
+
+# ## Key Functions
+
+# 1. **Remote Management**: Ensures a git remote exists pointing to the Nemo-agent repository
+# 2. **Fetching Updates**: Fetches the specified branch/tag and tags from the remote
+# 3. **Subtree Synchronization**: Uses `git subtree pull` to merge updates into a specified directory (default: `./agent`)
+# 4. **Commit Tracking**: Creates commits with markers to track what was last synced
+# 5. **Changelog Generation**: Shows a concise changelog of changes since the last sync
+
+# ## Usage
+# ```bash
+# ./agent-subtree-sync.sh [REF] [PREFIX] [REMOTE_NAME]
+# ```
+
+# - **REF**: Branch or tag to sync (default: `main`)
+# - **PREFIX**: Directory to sync into (default: `agent`)
+# - **REMOTE_NAME**: Name of the git remote (default: `agent`)
+
+# ## Additional Features
+# - The script includes environment variable support (`AGENT_REMOTE_URL`) for custom remote URLs
+# - It tracks the last synced commit and can show incremental changes
+# - There's commented-out initialization code at the bottom for setting up the subtree initially
+
+# This is essentially a utility script for keeping a submodule-like dependency (Nemo-agent) synchronized within the main Nemo project while maintaining full history for better traceability.
+
+
+
+
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Sync updates from BrowserOS-agent into BrowserOS via git subtree (no --squash).
+# Sync updates from Nemo-agent into Nemo via git subtree (no --squash).
 #
 # This script:
 #   1) fetches the agent remote
@@ -16,12 +50,12 @@ set -euo pipefail
 #   ./agent-subtree-sync.sh v0.23.0 agent agent
 #
 # Tip: Set defaults via env:
-#   AGENT_REMOTE_URL=git@github.com:browseros-ai/BrowserOS-agent.git ./agent-subtree-sync.sh main
+#   AGENT_REMOTE_URL=git@github.com:Nemo-ai/Nemo-agent.git ./agent-subtree-sync.sh main
 
 REF="${1:-main}"
 PREFIX="${2:-agent}"
 REMOTE_NAME="${3:-agent}"
-REMOTE_URL="${AGENT_REMOTE_URL:-https://github.com/browseros-ai/BrowserOS-agent.git}"
+REMOTE_URL="${AGENT_REMOTE_URL:-https://github.com/Nemo-ai/Nemo-agent.git}"
 
 # Ensure remote exists & points to REMOTE_URL
 echo ">>> Ensuring remote '$REMOTE_NAME' -> $REMOTE_URL"
@@ -48,7 +82,7 @@ fi
 
 # Do the subtree pull (NO --squash)
 echo ">>> Pulling subtree into '$PREFIX' from $UPSTREAM_REF (full history)"
-git subtree pull --prefix="$PREFIX" "$REMOTE_NAME" "$REF" -m "Update BrowserOS-agent: $PREFIX -> $UPSTREAM_SHA"
+git subtree pull --prefix="$PREFIX" "$REMOTE_NAME" "$REF" -m "Update Nemo-agent: $PREFIX -> $UPSTREAM_SHA"
 
 # Show a concise changelog range if we have a previous SHA
 echo ">>> Changelog upstream ($([[ -n "$PREV_SHA" ]] && echo "$PREV_SHA.." )$UPSTREAM_SHA):"
@@ -69,13 +103,13 @@ echo ">>> Done. Commit created with upstream marker."
 # #!/usr/bin/env bash
 # set -euo pipefail
 
-# # One-time initialization: add BrowserOS-agent as a subtree under ./agent (default)
+# # One-time initialization: add Nemo-agent as a subtree under ./agent (default)
 # # Usage:
 # #   ./agent-subtree-init.sh [REMOTE_URL] [REF] [PREFIX]
 # # Example:
-# #   ./agent-subtree-init.sh https://github.com/browseros-ai/BrowserOS-agent.git main agent
+# #   ./agent-subtree-init.sh https://github.com/Nemo-ai/Nemo-agent.git main agent
 
-# REMOTE_URL="${1:-https://github.com/browseros-ai/BrowserOS-agent.git}"
+# REMOTE_URL="${1:-https://github.com/Nemo-ai/Nemo-agent.git}"
 # REF="${2:-main}"
 # PREFIX="${3:-agent}"
 # REMOTE_NAME="agent"
@@ -87,7 +121,9 @@ echo ">>> Done. Commit created with upstream marker."
 # echo ">>> Fetching $REMOTE_NAME $REF"
 # git fetch "$REMOTE_NAME" "$REF" --tags
 
-# # IMPORTANT: no --squash (we keep full upstream history in BrowserOS)
+# # IMPORTANT: no --squash (we keep full upstream history in Nemo)
 # echo ">>> Adding subtree into '$PREFIX' from $REMOTE_NAME/$REF"
 # git subtree add --prefix="$PREFIX" "$REMOTE_NAME" "$REF" -m "subtree(init): add $PREFIX from $REMOTE_NAME/$REF (full history)"
 # echo ">>> Done."
+
+
