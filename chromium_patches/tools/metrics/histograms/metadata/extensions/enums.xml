@@ -6,16 +6,16 @@ index 3eea7f9d144a7..7af6e83dedf57 100644
    <int value="1934" label="EXPERIMENTALACTOR_STARTTASK"/>
    <int value="1935" label="EXPERIMENTALACTOR_EXECUTEACTION"/>
    <int value="1936" label="EXPERIMENTALACTOR_STOPTASK"/>
-+  <int value="1937" label="BROWSER_OS_GETACCESSIBILITYTREE"/>
-+  <int value="1938" label="BROWSER_OS_GETINTERACTIVESNAPSHOT"/>
-+  <int value="1939" label="BROWSER_OS_CLICK"/>
-+  <int value="1940" label="BROWSER_OS_INPUTTEXT"/>
-+  <int value="1941" label="BROWSER_OS_CLEAR"/>
-+  <int value="1942" label="BROWSER_OS_GETPAGELOADSTATUS"/>
-+  <int value="1943" label="BROWSER_OS_SCROLLUP"/>
-+  <int value="1944" label="BROWSER_OS_SCROLLDOWN"/>
-+  <int value="1945" label="BROWSER_OS_SCROLLTONODE"/>
-+  <int value="1946" label="BROWSER_OS_SENDKEYS"/>
++  <int value="1937" label="NEMO_GETACCESSIBILITYTREE"/>
++  <int value="1938" label="NEMO_GETINTERACTIVESNAPSHOT"/>
++  <int value="1939" label="NEMO_CLICK"/>
++  <int value="1940" label="NEMO_INPUTTEXT"/>
++  <int value="1941" label="NEMO_CLEAR"/>
++  <int value="1942" label="NEMO_GETPAGELOADSTATUS"/>
++  <int value="1943" label="NEMO_SCROLLUP"/>
++  <int value="1944" label="NEMO_SCROLLDOWN"/>
++  <int value="1945" label="NEMO_SCROLLTONODE"/>
++  <int value="1946" label="NEMO_SENDKEYS"/>
  </enum>
  
  <!-- LINT.ThenChange(//extensions/browser/extension_function_histogram_value.h:HistogramValue) -->
