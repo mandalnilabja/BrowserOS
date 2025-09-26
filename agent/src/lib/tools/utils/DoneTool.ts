@@ -1,6 +1,6 @@
 import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
-import { toolSuccess } from '@/lib/tools/Tool.interface';
+import { toolSuccess } from '@/lib/tools/tool.interface';
 import { ExecutionContext } from '@/lib/runtime/ExecutionContext';
 import { PubSub } from '@/lib/pubsub';
 

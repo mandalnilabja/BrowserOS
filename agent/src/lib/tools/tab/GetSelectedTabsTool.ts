@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { DynamicStructuredTool } from "@langchain/core/tools"
 import { ExecutionContext } from "@/lib/runtime/ExecutionContext"
-import { toolSuccess, toolError, type ToolOutput } from "@/lib/tools/Tool.interface"
+import { toolSuccess, toolError, type ToolOutput } from "@/lib/tools/tool.interface"
 import { PubSub } from "@/lib/pubsub"
 
 // Input schema - no input required

@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { DynamicStructuredTool } from '@langchain/core/tools'
 import { ExecutionContext } from '@/lib/runtime/ExecutionContext'
 import { StorageManager } from '@/lib/runtime/StorageManager'
-import { toolSuccess, toolError, type ToolOutput } from '@/lib/tools/Tool.interface'
+import { toolSuccess, toolError, type ToolOutput } from '@/lib/tools/tool.interface'
 
 // Input schema for storage operations
 const StorageToolInputSchema = z.object({

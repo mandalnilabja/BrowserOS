@@ -118,7 +118,7 @@ We are building an MCP (Model Context Protocol) integration for the Nxtscape bro
 import { z } from "zod"
 import { DynamicStructuredTool } from "@langchain/core/tools"
 import { ExecutionContext } from "@/lib/runtime/ExecutionContext"
-import { toolSuccess, toolError, type ToolOutput } from "@/lib/tools/Tool.interface"
+import { toolSuccess, toolError, type ToolOutput } from "@/lib/tools/tool.interface"
 
 // Input schema - only runtime operations
 const MCPToolInputSchema = z.object({
