@@ -71,7 +71,7 @@ export function NewTab() {
           {/* BrowserOS Branding */}
           <div className="flex items-center justify-center mb-10">
             <img 
-              src="/assets/browseros.svg" 
+              src="/assets/nemo.svg" 
               alt="BrowserOS" 
               className="w-12 h-12 mr-3"
             />

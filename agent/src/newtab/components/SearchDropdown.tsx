@@ -27,7 +27,7 @@ function getFaviconFromPattern(urlPattern?: string) {
 }
 
 function getProviderIcon(provider: Provider) {
-  return provider.iconUrl || getFaviconFromPattern(provider.urlPattern) || '/assets/new_tab_search/browseros.svg'
+  return provider.iconUrl || getFaviconFromPattern(provider.urlPattern) || '/assets/new_tab_search/nemo.svg'
 }
 
 export function SearchDropdown({ query, onSelect, onClose }: SearchDropdownProps) {

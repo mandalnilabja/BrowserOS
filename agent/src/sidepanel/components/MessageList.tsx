@@ -243,7 +243,7 @@ export function MessageList({ messages, isProcessing = false, onScrollStateChang
               <span>
                 web assistant{' '}
                 <img 
-                  src="/assets/browseros.svg" 
+                  src="/assets/nemo.svg" 
                   alt="BrowserOS" 
                   className="w-8 h-8 inline-block align-text-bottom animate-fade-in-up"
                 />

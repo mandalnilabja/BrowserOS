@@ -34,7 +34,7 @@ const DEFAULT_PROVIDERS: Provider[] = [
     category: 'llm',
     actionType: 'sidepanel',
     available: true,
-    iconUrl: '/assets/new_tab_search/browseros.svg'
+    iconUrl: '/assets/new_tab_search/nemo.svg'
   },
   {
     id: 'chatgpt',

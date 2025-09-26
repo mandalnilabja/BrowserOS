@@ -109,7 +109,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
                 <div className="mb-6">
                   <div className="flex items-center gap-3 mb-4">
                     <img 
-                      src="/assets/browseros.svg" 
+                      src="/assets/nemo.svg" 
                       alt="BrowserOS" 
                       className="w-10 h-10"
                     />

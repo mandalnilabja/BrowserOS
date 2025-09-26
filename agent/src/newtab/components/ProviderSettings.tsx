@@ -25,7 +25,7 @@ function getProviderIcon(provider: Provider) {
   if (provider.urlPattern) {
     return getFaviconFromPattern(provider.urlPattern)
   }
-  return '/assets/new_tab_search/browseros.svg'
+  return '/assets/new_tab_search/nemo.svg'
 }
 
 interface AddProviderFormState {

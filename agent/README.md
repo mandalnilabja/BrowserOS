@@ -1,6 +1,4 @@
-# BrowserOS Agent
-
-> **⚠️ Note:** This is only the submodule for the browserOS agent -- https://github.com/browseros-ai/BrowserOS-agent  
+# Nemo Agent
 
 ## Contributing
 

@@ -1,4 +1,4 @@
-# BrowserOS Agent - Development Guide
+# Nemo Agent - Development Guide
 
 ## Build Instructions
 
@@ -6,8 +6,8 @@
 
 1. **Clone the repository and install dependencies**
    ```bash
-   git clone https://github.com/browseros-ai/BrowserOS-agent
-   cd BrowserOS-agent
+   git clone https://github.com/Nemo-ai/Nemo-agent
+   cd Nemo-agent
    yarn
    ```
 
