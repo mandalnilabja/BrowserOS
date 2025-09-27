@@ -144,30 +144,6 @@
     --brand: 355 65% 60%;
   }
 
-  .gray {
-    --background: 220 15% 20%;
-    --background-alt: 220 15% 18%;
-    --header: 220 15% 18%;
-    --foreground: 0 0% 90%;
-    --card: 220 15% 20%;
-    --card-foreground: 0 0% 90%;
-    --popover: 220 15% 20%;
-    --popover-foreground: 0 0% 90%;
-    --primary: 355 65% 60%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 220 15% 25%;
-    --secondary-foreground: 0 0% 90%;
-    --muted: 220 15% 25%;
-    --muted-foreground: 0 0% 70%;
-    --accent: 220 15% 25%;
-    --accent-foreground: 0 0% 90%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 220 15% 30%;
-    --input: 220 15% 30%;
-    --ring: 355 65% 60%;
-    --brand: 355 65% 60%;
-  }
 }
 
 @layer base {
@@ -851,18 +827,13 @@ p, span, div, h1, h2, h3, h4, h5, h6, li, td, th, label, input, textarea, button
 }
 
 /* Extract tool card - light theme background override */
-:root:not(.dark):not(.gray) .extract-card {
+:root:not(.dark) .extract-card {
   background-color: #F8EFED;
 }
 
 /* Tab selector outputs - light theme background override */
-:root:not(.dark):not(.gray) .tab-card {
+:root:not(.dark) .tab-card {
   background-color: #F8EFED;
-}
-
-/* Selected tabs chip styling - make chips lighter than header in gray theme */
-.gray .selected-tab-chip {
-  background-color: hsl(220 15% 35%);
 }
 
 /* Normalize bullets in Extracted Items card: hide native summary marker */

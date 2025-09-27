@@ -27,9 +27,8 @@ export function NewTab() {
   useEffect(() => {
     document.documentElement.style.setProperty('--app-font-size', `${fontSize}px`)
     const root = document.documentElement
-    root.classList.remove('dark', 'gray')
+    root.classList.remove('dark')
     if (theme === 'dark') root.classList.add('dark')
-    if (theme === 'gray') root.classList.add('gray')
   }, [theme, fontSize])
   
   // Render create agent page if view is set

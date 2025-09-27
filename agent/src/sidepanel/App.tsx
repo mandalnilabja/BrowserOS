@@ -36,8 +36,8 @@ export function App() {
     
     // Apply theme classes
     const root = document.documentElement
-    root.classList.remove('gray')
-    if (theme === 'gray') root.classList.add('gray')
+    root.classList.remove('dark')
+    if (theme === 'dark') root.classList.add('dark')
   }, [fontSize, theme])
   
   // Announce connection status changes

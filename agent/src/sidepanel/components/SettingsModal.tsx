@@ -25,7 +25,7 @@ export function SettingsModal({ isOpen, onClose, onOpenHelp }: SettingsModalProp
   const { sendMessage } = useSidePanelPortMessaging()
 
   // Select theme
-  const selectTheme = (next: 'light' | 'dark' | 'gray') => {
+  const selectTheme = (next: 'light' | 'dark') => {
     setTheme(next)
   }
 
@@ -154,16 +154,6 @@ export function SettingsModal({ isOpen, onClose, onOpenHelp }: SettingsModalProp
                     aria-pressed={theme === 'dark'}
                   >
                     Dark
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => selectTheme('gray')}
-                    className={`px-3 py-1.5 text-xs font-medium transition-colors border-l border-border ${
-                      theme === 'gray' ? 'bg-brand text-white' : 'text-foreground hover:bg-muted'
-                    }`}
-                    aria-pressed={theme === 'gray'}
-                  >
-                    Gray
                   </button>
                 </div>
               </div>

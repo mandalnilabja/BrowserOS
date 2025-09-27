@@ -5,7 +5,7 @@ import { z } from 'zod'
 // Settings schema
 const SettingsSchema = z.object({
   fontSize: z.number().min(13).max(21).default(16),  // Font size in pixels
-  theme: z.enum(['light', 'dark', 'gray']).default('light'),  // App theme
+  theme: z.enum(['light', 'dark']).default('light'),  // App theme
   autoScroll: z.boolean().default(true),  // Auto-scroll chat to bottom
   autoCollapseTools: z.boolean().default(false),  // Auto-collapse tool results
   chatMode: z.boolean().default(false)  // Chat mode for Q&A (uses ChatAgent instead of BrowserAgent)
@@ -16,7 +16,7 @@ type Settings = z.infer<typeof SettingsSchema>
 // Store actions
 interface SettingsActions {
   setFontSize: (size: number) => void
-  setTheme: (theme: 'light' | 'dark' | 'gray') => void
+  setTheme: (theme: 'light' | 'dark') => void
   setAutoScroll: (enabled: boolean) => void
   setAutoCollapseTools: (enabled: boolean) => void
   setChatMode: (enabled: boolean) => void
@@ -51,9 +51,7 @@ export const useSettingsStore = create<Settings & SettingsActions>()(
         // Apply theme classes to document
         const root = document.documentElement
         root.classList.remove('dark')
-        root.classList.remove('gray')
         if (theme === 'dark') root.classList.add('dark')
-        if (theme === 'gray') root.classList.add('gray')
       },
       
       setAutoScroll: (enabled) => {
@@ -73,12 +71,11 @@ export const useSettingsStore = create<Settings & SettingsActions>()(
         // Reset document styles
         document.documentElement.style.removeProperty('--app-font-size')
         document.documentElement.classList.remove('dark')
-        document.documentElement.classList.remove('gray')
       }
     }),
     {
       name: 'Nemo-settings',  // localStorage key
-      version: 5,
+      version: 6,
       migrate: (persisted: any, version: number) => {
         // Migrate from v1 isDarkMode -> theme
         if (version === 1 && persisted) {
@@ -93,7 +90,7 @@ export const useSettingsStore = create<Settings & SettingsActions>()(
         if (version === 2 && persisted) {
           return {
             fontSize: typeof persisted.fontSize === 'number' ? persisted.fontSize : 16,
-            theme: persisted.theme === 'dark' || persisted.theme === 'gray' ? persisted.theme : 'light',
+            theme: persisted.theme === 'dark' ? 'dark' : 'light',
             autoScroll: true
           } as Settings
         }
@@ -101,7 +98,7 @@ export const useSettingsStore = create<Settings & SettingsActions>()(
         if (version === 3 && persisted) {
           return {
             fontSize: typeof persisted.fontSize === 'number' ? persisted.fontSize : 16,
-            theme: persisted.theme === 'dark' || persisted.theme === 'gray' ? persisted.theme : 'light',
+            theme: persisted.theme === 'dark' ? 'dark' : 'light',
             autoScroll: typeof persisted.autoScroll === 'boolean' ? persisted.autoScroll : true,
             autoCollapseTools: false,
             chatMode: false
@@ -111,10 +108,20 @@ export const useSettingsStore = create<Settings & SettingsActions>()(
         if (version === 4 && persisted) {
           return {
             fontSize: typeof persisted.fontSize === 'number' ? persisted.fontSize : 16,
-            theme: persisted.theme === 'dark' || persisted.theme === 'gray' ? persisted.theme : 'light',
+            theme: persisted.theme === 'dark' ? 'dark' : 'light',
             autoScroll: typeof persisted.autoScroll === 'boolean' ? persisted.autoScroll : true,
             autoCollapseTools: typeof persisted.autoCollapseTools === 'boolean' ? persisted.autoCollapseTools : false,
             chatMode: false
+          } as Settings
+        }
+        // Migrate to v6 remove gray theme, convert to light
+        if (version === 5 && persisted) {
+          return {
+            fontSize: typeof persisted.fontSize === 'number' ? persisted.fontSize : 16,
+            theme: persisted.theme === 'gray' ? 'light' : (persisted.theme === 'dark' ? 'dark' : 'light'),
+            autoScroll: typeof persisted.autoScroll === 'boolean' ? persisted.autoScroll : true,
+            autoCollapseTools: typeof persisted.autoCollapseTools === 'boolean' ? persisted.autoCollapseTools : false,
+            chatMode: typeof persisted.chatMode === 'boolean' ? persisted.chatMode : false
           } as Settings
         }
         return persisted as Settings
