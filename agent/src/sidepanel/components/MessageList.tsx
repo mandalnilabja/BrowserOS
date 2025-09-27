@@ -380,7 +380,7 @@ export function MessageList({ messages, isProcessing = false, onScrollStateChang
                         {isCurrentlyExecuting && (
                           <div 
                             className="absolute left-[12px] top-[8px] w-2 h-2 rounded-full animate-pulse"
-                            style={{ backgroundColor: '#FB661F' }}
+                            style={{ backgroundColor: '#EC6164' }}
                             aria-label="Currently executing"
                           />
                         )}

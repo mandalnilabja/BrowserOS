@@ -720,7 +720,7 @@ export class BrowserPage {
           height: 0;
           border-style: solid;
           border-width: 0 12px 20px 12px;
-          border-color: transparent transparent #FB6618 transparent;
+          border-color: transparent transparent #EC6164 transparent;
           transform: translate(-3px, -3px) rotate(45deg);
           filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.4));
         \`;
