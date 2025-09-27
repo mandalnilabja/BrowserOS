@@ -9,7 +9,6 @@ import { PortManager } from './router/PortManager'
 
 // Import handlers
 import { ExecutionHandler } from './handlers/ExecutionHandler'
-import { ProvidersHandler } from './handlers/ProvidersHandler'
 import { MCPHandler } from './handlers/MCPHandler'
 import { PlanHandler } from './handlers/PlanHandler'
 
@@ -31,7 +30,6 @@ const portManager = new PortManager()
 
 // Create handler instances
 const executionHandler = new ExecutionHandler()
-const providersHandler = new ProvidersHandler()
 const mcpHandler = new MCPHandler()
 const planHandler = new PlanHandler()
 
@@ -62,17 +60,6 @@ function registerHandlers(): void {
   messageRouter.registerHandler(
     MessageType.HUMAN_INPUT_RESPONSE,
     (msg, port) => executionHandler.handleHumanInputResponse(msg, port)
-  )
-  
-  // Provider handlers
-  messageRouter.registerHandler(
-    MessageType.GET_LLM_PROVIDERS,
-    (msg, port) => providersHandler.handleGetProviders(msg, port)
-  )
-  
-  messageRouter.registerHandler(
-    MessageType.SAVE_LLM_PROVIDERS,
-    (msg, port) => providersHandler.handleSaveProviders(msg, port)
   )
   
   // MCP handlers

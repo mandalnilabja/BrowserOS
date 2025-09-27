@@ -159,26 +159,6 @@ export class Execution {
       executionContext.setSelectedTabIds(this.options.tabIds || []);
       executionContext.startExecution(this.options.tabId || 0);
 
-      // Evals2: start a session and attach parent span to context
-      let parentSpanId: string | undefined;
-      if (this.pubsub) {
-        try {
-          const sessionId = `session_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-          const { parent } = await this.pubsub.startSession({
-            sessionId,
-            task: query,
-            timestamp: Date.now(),
-            agentVersion: 'v1'
-          });
-          parentSpanId = parent;
-          if (parentSpanId) {
-            executionContext.parentSpanId = parentSpanId;
-          }
-        } catch (e) {
-          // Non-fatal: continue without evals session
-        }
-      }
-
       if (!getFeatureFlags().isEnabled('NEW_AGENT') && this.options.mode !== 'chat') {
         executionContext.getPubSub().publishMessage({
           msgId: "old_agent_notice",

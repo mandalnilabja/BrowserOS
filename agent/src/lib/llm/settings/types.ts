@@ -15,5 +15,5 @@ export {
   NemoPrefObjectSchema,
   ProviderCapabilitiesSchema,
   ModelConfigSchema,
-  BROWSEROS_PREFERENCE_KEYS
+  NEMO_PREFERENCE_KEYS
 } from './NemoTypes' 

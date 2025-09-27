@@ -1,16 +1,14 @@
 import React, { useMemo } from 'react'
-import { Play, Edit } from 'lucide-react'
+import { Play } from 'lucide-react'
 import { type Agent } from '@/newtab/schemas/agent.schema'
 import { useAgentsStore } from '@/newtab/stores/agentsStore'
 import { useProviderStore } from '@/newtab/stores/providerStore'
 
-interface UserAgentsSectionProps {
-  onEditAgent: () => void
-}
+interface UserAgentsSectionProps {}
 
 const MAX_AGENTS_TO_SHOW = 4
 
-export function UserAgentsSection({ onEditAgent }: UserAgentsSectionProps) {
+export function UserAgentsSection({}: UserAgentsSectionProps) {
   const { agents } = useAgentsStore()
   const { executeAgent } = useProviderStore()
   
@@ -43,14 +41,6 @@ export function UserAgentsSection({ onEditAgent }: UserAgentsSectionProps) {
     <div className="w-full max-w-3xl px-4 mt-16 animate-in fade-in duration-500">
       <div className="flex items-center justify-between mb-3 px-1">
         <h2 className="text-xs font-medium text-muted-foreground/80 uppercase tracking-wider">Your agents</h2>
-        {agents.length > MAX_AGENTS_TO_SHOW && (
-          <button
-            onClick={onEditAgent}
-            className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
-          >
-            View all ({agents.length})
-          </button>
-        )}
       </div>
       
       <div className="grid grid-cols-2 gap-2.5">
@@ -85,18 +75,6 @@ export function UserAgentsSection({ onEditAgent }: UserAgentsSectionProps) {
                 </div>
               </div>
               
-              {/* Edit button - visible on hover */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onEditAgent()
-                }}
-                className="p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-accent transition-all ml-2 mt-0.5"
-                aria-label={`Edit ${agent.name}`}
-                title="Edit agent"
-              >
-                <Edit className="w-3 h-3 text-muted-foreground" />
-              </button>
             </div>
           </button>
         ))}

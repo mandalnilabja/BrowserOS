@@ -5,7 +5,7 @@ import {
   NemoProvidersConfig,
   NemoProvidersConfigSchema,
   NemoPrefObject,
-  BROWSEROS_PREFERENCE_KEYS
+  NEMO_PREFERENCE_KEYS
 } from './NemoTypes'
 
 // Type definitions for chrome.browserOS API
@@ -108,7 +108,7 @@ export class LLMSettingsReader {
     if (!browserOS?.getPref) {
       // Fallback: try chrome.storage.local
       try {
-        const key = BROWSEROS_PREFERENCE_KEYS.PROVIDERS
+        const key = NEMO_PREFERENCE_KEYS.PROVIDERS
         const stored = await new Promise<any>((resolve) => {
           chrome.storage?.local?.get(key, (result) => resolve(result))
         })
@@ -133,7 +133,7 @@ export class LLMSettingsReader {
     }
     
     return new Promise<NemoProvider | null>((resolve) => {
-      browserOS!.getPref(BROWSEROS_PREFERENCE_KEYS.PROVIDERS, (pref: NemoPrefObject) => {
+      browserOS!.getPref(NEMO_PREFERENCE_KEYS.PROVIDERS, (pref: NemoPrefObject) => {
         if (chrome.runtime.lastError) {
           Logging.log('LLMSettingsReader', 
             `Failed to read preference: ${chrome.runtime.lastError.message}`, 'warning')
@@ -183,7 +183,7 @@ export class LLMSettingsReader {
     if (!browserOS?.getPref) {
       // Fallback: try chrome.storage.local
       try {
-        const key = BROWSEROS_PREFERENCE_KEYS.PROVIDERS
+        const key = NEMO_PREFERENCE_KEYS.PROVIDERS
         const stored = await new Promise<any>((resolve) => {
           chrome.storage?.local?.get(key, (result) => resolve(result))
         })
@@ -196,7 +196,7 @@ export class LLMSettingsReader {
     }
     
     return new Promise<NemoProvidersConfig | null>((resolve) => {
-      browserOS!.getPref(BROWSEROS_PREFERENCE_KEYS.PROVIDERS, (pref: NemoPrefObject) => {
+      browserOS!.getPref(NEMO_PREFERENCE_KEYS.PROVIDERS, (pref: NemoPrefObject) => {
         if (chrome.runtime.lastError || !pref?.value) {
           resolve(null)
           return

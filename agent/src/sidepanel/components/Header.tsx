@@ -8,8 +8,6 @@ import { HelpSection } from './HelpSection'
 import { Settings, Pause, RotateCcw, HelpCircle } from 'lucide-react'
 import { useSettingsStore } from '@/sidepanel/stores/settingsStore'
 import { useEffect } from 'react'
-import { z } from 'zod'
-import { NemoProvidersConfig, NemoProvidersConfigSchema } from '@/lib/llm/settings/types'
 import { MCP_SERVERS, type MCPServerConfig } from '@/config/mcpServers'
 
 
@@ -30,8 +28,6 @@ export const Header = memo(function Header({ onReset, showReset, isProcessing }:
   const [showSettings, setShowSettings] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [showMCPDropdown, setShowMCPDropdown] = useState(false)
-  const [providersConfig, setProvidersConfig] = useState<NemoProvidersConfig | null>(null)
-  const [providersError, setProvidersError] = useState<string | null>(null)
   const [mcpInstallStatus, setMcpInstallStatus] = useState<{ message: string; type: 'error' | 'success' } | null>(null)
   const [installedServers, setInstalledServers] = useState<any[]>([])
   const { theme } = useSettingsStore()
@@ -103,19 +99,10 @@ export const Header = memo(function Header({ onReset, showReset, isProcessing }:
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [showSettings, showHelp])
 
-  // Load providers config for default provider dropdown
+  // Load installed servers
   useEffect(() => {
     const handler = (payload: any) => {
       if (payload && payload.status === 'success' && payload.data) {
-        // Handle providers config
-        if (payload.data.providersConfig) {
-          try {
-            const cfg = NemoProvidersConfigSchema.parse(payload.data.providersConfig)
-            setProvidersConfig(cfg)
-          } catch (err) {
-            setProvidersError(err instanceof Error ? err.message : String(err))
-          }
-        }
         // Handle installed servers response
         if (payload.data.servers) {
           setInstalledServers(payload.data.servers)
@@ -123,8 +110,6 @@ export const Header = memo(function Header({ onReset, showReset, isProcessing }:
       }
     }
     addMessageListener<any>(MessageType.WORKFLOW_STATUS, handler)
-    // Initial fetch
-    sendMessage(MessageType.GET_LLM_PROVIDERS as any, {})
     return () => removeMessageListener<any>(MessageType.WORKFLOW_STATUS, handler)
   }, [])
 

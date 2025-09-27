@@ -550,7 +550,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
             (provider.openIn === undefined && provider.category === 'llm')
 
           let tabId: number | undefined
-          let browserOS = getNemoAdapter()
+          let nemo = getNemoAdapter()
 
           try {
             if (openInNewTab) {
@@ -571,7 +571,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
               const start = Date.now()
               while (Date.now() - start < CHAT_PROVIDER_READY_TIMEOUT_MS) {
                 try {
-                  const status = await browserOS.getPageLoadStatus(tabId)
+                  const status = await nemo.getPageLoadStatus(tabId)
                   if (status.isDOMContentLoaded) {
                     break
                   }
@@ -588,7 +588,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
                   if (tabId == null) return false;
                   try {
                     const script = buildQueryInjectionScript(query);
-                    const result = await browserOS.executeJavaScript(tabId, script);
+                    const result = await nemo.executeJavaScript(tabId, script);
                     return Boolean(result);
                   } catch (error) {
                     console.warn('Failed to inject query for provider', provider.id, error);
@@ -608,7 +608,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
 
               if (provider.focusBeforeSubmit) {
                 try {
-                  await browserOS.executeJavaScript(tabId, `
+                  await nemo.executeJavaScript(tabId, `
                     (function() {
                       const el = document.querySelector('textarea, [contenteditable="true"], input[type="search"], input[type="text"]');
                       if (el) el.focus();
@@ -623,7 +623,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
             if (provider.autoSubmit && tabId != null) {
               if (hasPlaceholder || queryInjected) {
                 const submitKey = provider.submitKey || 'Enter'
-                await browserOS.sendKeys(tabId, submitKey as chrome.browserOS.Key)
+                await nemo.sendKeys(tabId, submitKey as chrome.browserOS.Key)
               }
             }
           } catch (error) {

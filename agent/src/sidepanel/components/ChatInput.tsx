@@ -9,8 +9,6 @@ import { useKeyboardShortcuts, useAutoResize } from '../hooks/useKeyboardShortcu
 import { useSidePanelPortMessaging } from '@/sidepanel/hooks'
 import { MessageType } from '@/lib/types/messaging'
 import { cn } from '@/sidepanel/lib/utils'
-import { Loader } from 'lucide-react'
-import { NemoProvidersConfig, NemoProvider } from '@/lib/llm/settings/NemoTypes'
 import { ModeToggle } from './ModeToggle'
 // Tailwind classes used in ModeToggle; no separate CSS import
 import { SlashCommandPalette } from './SlashCommandPalette'
@@ -32,7 +30,6 @@ export function ChatInput({ isConnected, isProcessing }: ChatInputProps) {
   const [showTabSelector, setShowTabSelector] = useState(false)
   const [showSlashPalette, setShowSlashPalette] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [providerOk, setProviderOk] = useState<boolean>(true)
   const [historyIndex, setHistoryIndex] = useState<number>(-1)
   const [draftBeforeHistory, setDraftBeforeHistory] = useState<string>('')
   
@@ -54,31 +51,8 @@ export function ChatInput({ isConnected, isProcessing }: ChatInputProps) {
     })
   }, [])  // Remove loadAgents dependency to avoid re-runs
   
-  // Provider health: only consider UI connected if current default provider is usable
-  useEffect(() => {
-    const computeOk = (cfg: NemoProvidersConfig) => {
-      const def = cfg.providers.find(p => p.id === cfg.defaultProviderId)
-      setProviderOk(isProviderUsable(def || null))
-    }
-
-    const handleWorkflow = (payload: any) => {
-      // Only update when explicit providers config is present
-      if (payload && payload.data && payload.data.providersConfig) {
-        computeOk(payload.data.providersConfig as NemoProvidersConfig)
-      }
-    }
-
-    addMessageListener<any>(MessageType.WORKFLOW_STATUS, handleWorkflow)
-    return () => removeMessageListener<any>(MessageType.WORKFLOW_STATUS, handleWorkflow)
-  }, [addMessageListener, removeMessageListener])
-
-  const isProviderUsable = (provider: NemoProvider | null): boolean => {
-    // If the provider exists in the list, treat it as usable regardless of field completeness
-    return !!provider
-  }
-
   const connectionOk = isConnected || portConnected
-  const uiConnected = connectionOk && providerOk
+  const uiConnected = connectionOk  // Always consider provider usable since we only have Nemo Agent
   
   // Auto-resize textarea
   useAutoResize(textareaRef, input)

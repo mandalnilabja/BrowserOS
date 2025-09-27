@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { CommandInput } from './components/CommandInput'
 import { ThemeToggle } from './components/ThemeToggle'
-import { CreateAgentPage } from './pages/CreateAgentPage'
 import { UserAgentsSection } from './components/UserAgentsSection'
 import { useSettingsStore } from '@/sidepanel/stores/settingsStore'
 import { useAgentsStore } from './stores/agentsStore'
@@ -10,7 +9,6 @@ import { Settings } from 'lucide-react'
 export function NewTab() {
   const { theme, fontSize } = useSettingsStore()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [currentView, setCurrentView] = useState<'main' | 'create-agent'>('main')
   const { loadAgents } = useAgentsStore()
   
   // Load agents from storage on mount
@@ -30,12 +28,6 @@ export function NewTab() {
     root.classList.remove('dark')
     if (theme === 'dark') root.classList.add('dark')
   }, [theme, fontSize])
-  
-  // Render create agent page if view is set
-  if (currentView === 'create-agent') {
-    return <CreateAgentPage onBack={() => setCurrentView('main')} />
-  }
-  
   
   return (
     <div className="min-h-screen bg-background relative">
@@ -64,11 +56,11 @@ export function NewTab() {
           </div>
           
           {/* Command Input - Clean and Centered */}
-          <CommandInput onCreateAgent={() => setCurrentView('create-agent')} />
+          <CommandInput />
         </div>
         
         {/* User Agents Section - Shows up to 4 random agents */}
-        <UserAgentsSection onEditAgent={() => setCurrentView('create-agent')} />
+        <UserAgentsSection />
       </div>
     </div>
   )

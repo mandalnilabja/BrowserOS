@@ -35,7 +35,6 @@ export class ExecutionHandler {
       query,
       source: metadata?.source || 'unknown',
       mode: chatMode ? 'chat' : 'browse',
-      executionMode: metadata?.executionMode || 'dynamic',
     })
     
     try {
@@ -194,7 +193,6 @@ export class ExecutionHandler {
       query,
       source: metadata?.source || 'newtab',
       mode: 'browse',
-      executionMode: metadata?.executionMode || 'dynamic',
     })
 
     try {

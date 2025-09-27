@@ -5,7 +5,7 @@ import type { FeedbackSubmission } from '@/lib/types/feedback'
  * Handles feedback submission to Cloudflare Worker API
  */
 
-const FEEDBACK_API_URL = 'https://cdn.browseros.com/api/agent-feedback'
+const FEEDBACK_API_URL = 'https://cdn.nemo.com/api/agent-feedback'
 const REQUEST_TIMEOUT_MS = 10000  // 10 second timeout
 
 class FeedbackService {

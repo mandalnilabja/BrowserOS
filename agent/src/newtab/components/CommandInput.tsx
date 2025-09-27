@@ -1,62 +1,38 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { ProviderDropdown } from './ProviderDropdown'
-import { CommandPalette } from './CommandPalette'
-import { SearchDropdown } from './SearchDropdown'
-import { useProviderStore, type Provider } from '../stores/providerStore'
+import { useProviderStore } from '../stores/providerStore'
 import { useAgentsStore } from '../stores/agentsStore'
 
-interface CommandInputProps {
-  onCreateAgent?: () => void
-}
+interface CommandInputProps {}
 
-export function CommandInput({ onCreateAgent }: CommandInputProps = {}) {
+export function CommandInput({}: CommandInputProps = {}) {
   const [value, setValue] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false)
-  const [isExecutingAgent, setIsExecutingAgent] = useState(false)
-  const [executingAgentName, setExecutingAgentName] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   
-  const { getSelectedProvider, executeProviderAction, executeAgent } = useProviderStore()
+  const { executeAgent } = useProviderStore()
   const { agents, selectedAgentId } = useAgentsStore()
-  
-  const selectedProvider = getSelectedProvider()
   
   // Auto-focus on mount
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
   
-  const handleProviderSelect = async (provider: Provider, query: string) => {
-    setShowSearchDropdown(false)
-
-    await executeProviderAction(provider, query)
-    setValue('')
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!value.trim()) return
-    
-    // Don't submit if dropdowns are open
-    if ( showSearchDropdown) return
     
     const query = value.trim()
     
     console.log('CommandInput handleSubmit:', { selectedAgentId, agents, query })
     
-    // Execute provider-specific action or agent
+    // Execute selected agent
     if (selectedAgentId) {
-      // Execute selected agent
       const agent = agents.find(a => a.id === selectedAgentId)
       console.log('Found agent:', agent)
       if (agent) {
         console.log('Executing agent:', agent.name, 'with query:', query)
         await executeAgent(agent, query)
       }
-    } else if (selectedProvider) {
-      console.log('Executing provider:', selectedProvider.name, 'with query:', query)
-      await executeProviderAction(selectedProvider, query)
     }
     
     setValue('')
@@ -84,20 +60,10 @@ export function CommandInput({ onCreateAgent }: CommandInputProps = {}) {
           onChange={(e) => {
             const newValue = e.target.value
             setValue(newValue)
-            
-            // Show command palette when user types '/'
-            // if (newValue === '/' || (newValue.startsWith('/') && showCommandPalette)) {
-            //   setShowCommandPalette(true)
-            //   setShowSearchDropdown(false)
-            // } else {
-              // Show search dropdown when there's text (not starting with '/')
-            setShowSearchDropdown(newValue.trim().length > 0)
-            // }
           }}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => {
             setIsFocused(false)
-            setShowSearchDropdown(false)
           }, 200)}
           placeholder={getPlaceholder()}
           className="
@@ -111,15 +77,6 @@ export function CommandInput({ onCreateAgent }: CommandInputProps = {}) {
         />
         
       </div>
-      
-      {/* Search Dropdown */}
-      {showSearchDropdown && (
-        <SearchDropdown
-          query={value}
-          onSelect={handleProviderSelect}
-          onClose={() => setShowSearchDropdown(false)}
-        />
-      )}
       
     </form>
   )
