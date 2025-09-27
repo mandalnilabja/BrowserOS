@@ -279,7 +279,7 @@ export function SettingsModal({ isOpen, onClose, onOpenHelp }: SettingsModalProp
             <h3 className="text-sm font-medium text-foreground">About</h3>
             <div className="p-4 rounded-xl bg-card border border-border/50">
               <p className="text-sm text-muted-foreground">
-                BrowserOS Agentic Assistant v{agentVersion}
+                Nemo Agentic Assistant v{agentVersion}
               </p>
               <div className="mt-3 flex items-center justify-between gap-3">
                 <p className="text-sm text-foreground">Have feedback or ideas? We'd love to hear from you.</p>

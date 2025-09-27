@@ -3,7 +3,7 @@ date: 2025-09-05T16:30:20Z
 researcher: Claude
 git_commit: 763beb159d1cd3f1d476f0112460ad5a8721af84
 branch: dev/evals2
-repository: BrowserOS-agent
+repository: Nemo-agent
 topic: "Evals2 System Implementation Research"
 tags: [research, codebase, evals2, evaluation, scoring, braintrust, telemetry]
 status: complete
@@ -17,7 +17,7 @@ last_updated_by: Claude
 **Researcher**: Claude
 **Git Commit**: 763beb159d1cd3f1d476f0112460ad5a8721af84
 **Branch**: dev/evals2
-**Repository**: BrowserOS-agent
+**Repository**: Nemo-agent
 
 ## Research Question
 Understanding how the evals2 system is implemented, including its architecture, evaluation flow, scoring mechanisms, and integration points with the main codebase.

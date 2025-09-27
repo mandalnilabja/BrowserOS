@@ -69,7 +69,7 @@ export const ENABLE_TELEMETRY = process.env.ENABLE_TELEMETRY === 'true';
 export const ENABLE_EVALS2 = process.env.ENABLE_EVALS2 === 'true';
 export const BRAINTRUST_API_KEY = process.env.BRAINTRUST_API_KEY || '';
 export const BRAINTRUST_PROJECT_UUID = process.env.BRAINTRUST_PROJECT_UUID || '';
-export const BRAINTRUST_PROJECT_NAME = process.env.BRAINTRUST_PROJECT_NAME || 'browseros-agent-online';
+export const BRAINTRUST_PROJECT_NAME = process.env.BRAINTRUST_PROJECT_NAME || 'nemo-agent-online';
 
 // Gemini API keys for evals2 scoring
 export const GOOGLE_GENAI_API_KEY = process.env.GOOGLE_GENAI_API_KEY || '';

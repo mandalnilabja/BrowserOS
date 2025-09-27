@@ -46,13 +46,13 @@ export const BrowserStateSchema = z.object({
   
   // Interactive elements as structured data
   clickableElements: z.array(z.object({
-    nodeId: z.number(),  // Chrome BrowserOS node ID
+    nodeId: z.number(),  // Chrome Nemo node ID
     text: z.string(),  // Element text (axName or tag)
     tag: z.string()  // HTML tag name
   })),  // Clickable elements with nodeId, text, and tag
   
   typeableElements: z.array(z.object({
-    nodeId: z.number(),  // Chrome BrowserOS node ID
+    nodeId: z.number(),  // Chrome Nemo node ID
     text: z.string(),  // Element text (axName or tag)
     tag: z.string()  // HTML tag name
   })),  // Typeable elements with nodeId, text, and tag
@@ -61,7 +61,7 @@ export const BrowserStateSchema = z.object({
   clickableElementsString: z.string(),  // Formatted string of clickable elements
   typeableElementsString: z.string(),  // Formatted string of typeable elements
   
-  // Hierarchical structure from BrowserOS API
+  // Hierarchical structure from Nemo API
   hierarchicalStructure: z.string().nullable().optional(),  // Hierarchical text representation with context
 })
 

@@ -3,19 +3,19 @@ import { z } from 'zod'
 import { useSidePanelPortMessaging } from '@/sidepanel/hooks/useSidePanelPortMessaging'
 import { MessageType } from '@/lib/types/messaging'
 import { 
-  BrowserOSProvidersConfig,
-  BrowserOSProvidersConfigSchema,
-  BrowserOSProvider,
-  BrowserOSProviderType,
-  BrowserOSProviderTypeSchema
-} from '@/lib/llm/settings/browserOSTypes'
+  NemoProvidersConfig,
+  NemoProvidersConfigSchema,
+  NemoProvider,
+  NemoProviderType,
+  NemoProviderTypeSchema
+} from '@/lib/llm/settings/NemoTypes'
 import { Button } from '@/sidepanel/components/ui/button'
 
 // Zod schema for the draft provider form
 const ProviderFormSchema = z.object({
   id: z.string().min(1),  // provider id
   name: z.string().min(1),  // display name
-  type: BrowserOSProviderTypeSchema,  // provider type
+  type: NemoProviderTypeSchema,  // provider type
   baseUrl: z.string().optional(),  // API base URL
   apiKey: z.string().min(1),  // API key
   modelId: z.string().min(1),  // Model identifier
@@ -28,7 +28,7 @@ type ProviderDraft = z.infer<typeof ProviderFormSchema>
 
 export function ProviderSettingsCard(): JSX.Element | null {
   const { sendMessage, addMessageListener, removeMessageListener } = useSidePanelPortMessaging()
-  const [config, setConfig] = useState<BrowserOSProvidersConfig | null>(null)
+  const [config, setConfig] = useState<NemoProvidersConfig | null>(null)
   const [draftOpen, setDraftOpen] = useState<boolean>(false)
   const [draft, setDraft] = useState<ProviderDraft | null>(null)
   const [saving, setSaving] = useState<boolean>(false)
@@ -47,7 +47,7 @@ export function ProviderSettingsCard(): JSX.Element | null {
   useEffect(() => {
     const handler = (payload: any) => {
       if (payload && payload.status === 'success' && payload.data && payload.data.providersConfig) {
-        const cfg = payload.data.providersConfig as BrowserOSProvidersConfig
+        const cfg = payload.data.providersConfig as NemoProvidersConfig
         setConfig(cfg)
         // Initialize selection once from default provider
         setSelectedProviderId(prev => (prev === null ? cfg.defaultProviderId : prev))
@@ -60,15 +60,15 @@ export function ProviderSettingsCard(): JSX.Element | null {
   const onSelectProvider = (providerId: string) => {
     if (!config) return
     const nextProviders = config.providers.map(p => ({ ...p, isDefault: p.id === providerId }))
-    const nextConfig: BrowserOSProvidersConfig = {
+    const nextConfig: NemoProvidersConfig = {
       defaultProviderId: providerId,
       providers: nextProviders
     }
     try {
-      BrowserOSProvidersConfigSchema.parse(nextConfig)
+      NemoProvidersConfigSchema.parse(nextConfig)
       setConfig(nextConfig)
       setSelectedProviderId(providerId)
-      const ok = sendMessage<BrowserOSProvidersConfig>(MessageType.SAVE_LLM_PROVIDERS as any, nextConfig)
+      const ok = sendMessage<NemoProvidersConfig>(MessageType.SAVE_LLM_PROVIDERS as any, nextConfig)
       if (!ok) setError('Failed to send save message')
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
@@ -99,7 +99,7 @@ export function ProviderSettingsCard(): JSX.Element | null {
     setEditingProviderId(null)
   }
 
-  const onEditProvider = (provider: BrowserOSProvider) => {
+  const onEditProvider = (provider: NemoProvider) => {
     setError(null)
     setDraftOpen(true)
     setEditingProviderId(provider.id)
@@ -116,7 +116,7 @@ export function ProviderSettingsCard(): JSX.Element | null {
     })
   }
 
-  const toProvider = (p: ProviderDraft, isDefault: boolean): BrowserOSProvider => {
+  const toProvider = (p: ProviderDraft, isDefault: boolean): NemoProvider => {
     const contextWindow: number | undefined =
       p.contextWindow === undefined || p.contextWindow === ''
         ? undefined
@@ -129,7 +129,7 @@ export function ProviderSettingsCard(): JSX.Element | null {
     return {
       id: p.id,
       name: p.name,
-      type: p.type as BrowserOSProviderType,
+      type: p.type as NemoProviderType,
       isDefault,
       isBuiltIn: false,
       baseUrl: p.baseUrl || undefined,
@@ -169,7 +169,7 @@ export function ProviderSettingsCard(): JSX.Element | null {
       }
       // Zod validation (secondary safety)
       ProviderFormSchema.parse(draft)
-      let nextProviders: BrowserOSProvider[]
+      let nextProviders: NemoProvider[]
       if (editingProviderId) {
         // Update existing provider
         const updated = toProvider(draft, config.defaultProviderId === draft.id)
@@ -181,12 +181,12 @@ export function ProviderSettingsCard(): JSX.Element | null {
       }
       // Keep isDefault flags in sync
       nextProviders = nextProviders.map(p => ({ ...p, isDefault: p.id === config.defaultProviderId }))
-      const nextConfig: BrowserOSProvidersConfig = {
+      const nextConfig: NemoProvidersConfig = {
         defaultProviderId: config.defaultProviderId,
         providers: nextProviders
       }
-      BrowserOSProvidersConfigSchema.parse(nextConfig)
-      const ok = sendMessage<BrowserOSProvidersConfig>(MessageType.SAVE_LLM_PROVIDERS as any, nextConfig)
+      NemoProvidersConfigSchema.parse(nextConfig)
+      const ok = sendMessage<NemoProvidersConfig>(MessageType.SAVE_LLM_PROVIDERS as any, nextConfig)
       if (!ok) setError('Failed to send save message')
       else setDraftOpen(false)
     } catch (e) {
@@ -207,15 +207,15 @@ export function ProviderSettingsCard(): JSX.Element | null {
     // Adjust default if needed
     const nextDefault = config.defaultProviderId === providerId ? remaining[0].id : config.defaultProviderId
     const nextProviders = remaining.map(p => ({ ...p, isDefault: p.id === nextDefault }))
-    const nextConfig: BrowserOSProvidersConfig = {
+    const nextConfig: NemoProvidersConfig = {
       defaultProviderId: nextDefault,
       providers: nextProviders
     }
     try {
-      BrowserOSProvidersConfigSchema.parse(nextConfig)
+      NemoProvidersConfigSchema.parse(nextConfig)
       setConfig(nextConfig)
       if (selectedProviderId === providerId) setSelectedProviderId(nextDefault)
-      const ok = sendMessage<BrowserOSProvidersConfig>(MessageType.SAVE_LLM_PROVIDERS as any, nextConfig)
+      const ok = sendMessage<NemoProvidersConfig>(MessageType.SAVE_LLM_PROVIDERS as any, nextConfig)
       if (!ok) setError('Failed to send save message')
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
@@ -237,14 +237,14 @@ export function ProviderSettingsCard(): JSX.Element | null {
               onChange={(e) => {
                 const nextId = e.target.value
                 const nextProviders = config.providers.map(p => ({ ...p, isDefault: p.id === nextId }))
-                const nextConfig: BrowserOSProvidersConfig = {
+                const nextConfig: NemoProvidersConfig = {
                   defaultProviderId: nextId,
                   providers: nextProviders
                 }
                 try {
-                  BrowserOSProvidersConfigSchema.parse(nextConfig)
+                  NemoProvidersConfigSchema.parse(nextConfig)
                   setConfig(nextConfig)
-                  const ok = sendMessage<BrowserOSProvidersConfig>(MessageType.SAVE_LLM_PROVIDERS as any, nextConfig)
+                  const ok = sendMessage<NemoProvidersConfig>(MessageType.SAVE_LLM_PROVIDERS as any, nextConfig)
                   if (!ok) setError('Failed to send save message')
                 } catch (err) {
                   setError(err instanceof Error ? err.message : String(err))
@@ -282,7 +282,7 @@ export function ProviderSettingsCard(): JSX.Element | null {
                 </div>
               </label>
               <div className="flex items-center gap-2">
-                {!(p.isBuiltIn || p.id === 'browseros' || p.type === 'browseros') && (
+                {!(p.isBuiltIn || p.id === 'nemo' || p.type === 'nemo') && (
                   <>
                     <Button
                       size="sm"
@@ -317,7 +317,7 @@ export function ProviderSettingsCard(): JSX.Element | null {
                 id="prov-type"
                 className="px-2 py-1 rounded-md border border-border bg-background text-sm"
                 value={draft.type}
-                onChange={e => setDraft({ ...draft, type: e.target.value as BrowserOSProviderType })}
+                onChange={e => setDraft({ ...draft, type: e.target.value as NemoProviderType })}
               >
                 {['openai_compatible','anthropic','google_gemini','ollama','openrouter','custom'].map(opt => (
                   <option key={opt} value={opt}>{opt}</option>

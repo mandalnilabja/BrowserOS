@@ -38,7 +38,7 @@ const processEnv = {
   'process.env.ENABLE_EVALS2': JSON.stringify(envKeys.ENABLE_EVALS2 || 'false'),
   'process.env.BRAINTRUST_API_KEY': JSON.stringify(envKeys.BRAINTRUST_API_KEY || ''),
   'process.env.BRAINTRUST_PROJECT_UUID': JSON.stringify(envKeys.BRAINTRUST_PROJECT_UUID || ''),
-  'process.env.BRAINTRUST_PROJECT_NAME': JSON.stringify(envKeys.BRAINTRUST_PROJECT_NAME || 'browseros-agent-online'),
+  'process.env.BRAINTRUST_PROJECT_NAME': JSON.stringify(envKeys.BRAINTRUST_PROJECT_NAME || 'nemo-agent-online'),
   // Gemini API keys for evals2 scoring
   'process.env.GOOGLE_GENAI_API_KEY': JSON.stringify(envKeys.GOOGLE_GENAI_API_KEY || ''),
   'process.env.GEMINI_API_KEY': JSON.stringify(envKeys.GEMINI_API_KEY || '')

@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 import { z } from 'zod'
 import { Agent } from '../stores/agentsStore'
 import { Logging } from '@/lib/utils/Logging'
-import { getBrowserOSAdapter } from '@/lib/browser/BrowserOSAdapter'
+import { getNemoAdapter } from '@/lib/browser/NemoAdapter'
 
 // Provider schema
 export const ProviderSchema = z.object({
@@ -29,8 +29,8 @@ const CHAT_PROVIDER_POST_LOAD_DELAY_MS = 400
 
 const DEFAULT_PROVIDERS: Provider[] = [
   {
-    id: 'browseros-agent',
-    name: 'BrowserOS Agent',
+    id: 'nemo-agent',
+    name: 'Nemo Agent',
     category: 'llm',
     actionType: 'sidepanel',
     available: true,
@@ -282,7 +282,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
     (set, get) => ({
       providers: DEFAULT_PROVIDERS,
       customProviders: [],
-      selectedProviderId: 'browseros-agent',
+      selectedProviderId: 'nemo-agent',
       isDropdownOpen: false,
       enabledProviderIds: DEFAULT_PROVIDERS.map(provider => provider.id),
       disabledProviderIds: [],
@@ -361,7 +361,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
           }
           const normalized = normalizeProviderOrders(nextState)
           const nextSelected = isSelected
-            ? normalized.enabledProviderIds[0] || 'browseros-agent'
+            ? normalized.enabledProviderIds[0] || 'nemo-agent'
             : state.selectedProviderId
 
           return {
@@ -431,7 +431,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
           }
           const normalized = normalizeProviderOrders(nextState)
           const selectedProviderId = state.selectedProviderId === id
-            ? normalized.enabledProviderIds[0] || 'browseros-agent'
+            ? normalized.enabledProviderIds[0] || 'nemo-agent'
             : state.selectedProviderId
           return {
             ...state,
@@ -502,7 +502,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
             ? parsed.disabled.map((provider: { id: string }) => provider?.id).filter((id: string) => typeof id === 'string')
             : []
 
-          const mapLegacyId = (id: string) => (id === 'browseros' ? 'browseros-agent' : id)
+          const mapLegacyId = (id: string) => (id === 'nemo' ? 'nemo-agent' : id)
 
           const enabledProviderIds = enabledLegacy.map(mapLegacyId)
           const disabledProviderIds = disabledLegacy.map(mapLegacyId)
@@ -516,7 +516,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
             const normalized = normalizeProviderOrders(nextState)
             const nextSelected = normalized.enabledProviderIds.includes(current.selectedProviderId)
               ? current.selectedProviderId
-              : normalized.enabledProviderIds[0] || 'browseros-agent'
+              : normalized.enabledProviderIds[0] || 'nemo-agent'
 
             return {
               ...current,
@@ -550,7 +550,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
             (provider.openIn === undefined && provider.category === 'llm')
 
           let tabId: number | undefined
-          let browserOS = getBrowserOSAdapter()
+          let browserOS = getNemoAdapter()
 
           try {
             if (openInNewTab) {
@@ -693,7 +693,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
       }
     }),
     {
-      name: 'browseros-providers',
+      name: 'nemo-providers',
       version: 2,
       migrate: (persistedState, version) => {
         if (!persistedState) return persistedState
@@ -717,7 +717,7 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
         return {
           providers: DEFAULT_PROVIDERS,
           customProviders,
-          selectedProviderId: legacyState.selectedProviderId || 'browseros-agent',
+          selectedProviderId: legacyState.selectedProviderId || 'nemo-agent',
           isDropdownOpen: false,
           enabledProviderIds: normalized.enabledProviderIds,
           disabledProviderIds: normalized.disabledProviderIds,

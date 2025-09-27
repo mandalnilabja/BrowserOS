@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { CommandInput } from './components/CommandInput'
 import { ThemeToggle } from './components/ThemeToggle'
-import { SettingsDialog } from './components/SettingsDialog'
 import { CreateAgentPage } from './pages/CreateAgentPage'
 import { UserAgentsSection } from './components/UserAgentsSection'
 import { useSettingsStore } from '@/sidepanel/stores/settingsStore'
@@ -44,22 +43,7 @@ export function NewTab() {
       {/* Top Right Controls - Settings and Theme Toggle */}
       <div className="absolute top-6 right-6 z-10 flex items-center gap-2">
         {/* Settings Button */}
-        <button
-          type="button"
-          className="
-            p-2 rounded-full 
-            transition-colors duration-200 ease-in-out 
-            focus:outline-none focus:ring-2 focus:ring-offset-2 
-            focus:ring-offset-white dark:focus:ring-offset-gray-900 
-            focus:ring-gray-400 
-            text-gray-600 dark:text-gray-300
-            hover:bg-gray-100 dark:hover:bg-gray-800
-          "
-          aria-label="Settings"
-          onClick={() => setIsSettingsOpen(true)}
-        >
-          <Settings size={20} className="transition-transform duration-200" />
-        </button>
+
         
         {/* Theme Toggle */}
         <ThemeToggle />
@@ -68,15 +52,15 @@ export function NewTab() {
       {/* Main Content - Centered (slightly above center for better visual balance) */}
       <div className="min-h-screen flex flex-col items-center justify-center">
         <div className="w-full max-w-3xl px-4 -mt-20">
-          {/* BrowserOS Branding */}
+          {/* Nemo Branding */}
           <div className="flex items-center justify-center mb-10">
             <img 
               src="/assets/nemo.svg" 
-              alt="BrowserOS" 
+              alt="Nemo" 
               className="w-12 h-12 mr-3"
             />
             <span className="text-4xl font-light text-foreground tracking-tight">
-              BrowserOS
+              Nemo
             </span>
           </div>
           
@@ -87,12 +71,6 @@ export function NewTab() {
         {/* User Agents Section - Shows up to 4 random agents */}
         <UserAgentsSection onEditAgent={() => setCurrentView('create-agent')} />
       </div>
-      
-      {/* Settings Dialog */}
-      <SettingsDialog 
-        isOpen={isSettingsOpen} 
-        onClose={() => setIsSettingsOpen(false)} 
-      />
     </div>
   )
 }

@@ -36,9 +36,7 @@ export function App() {
     
     // Apply theme classes
     const root = document.documentElement
-    root.classList.remove('dark')
     root.classList.remove('gray')
-    if (theme === 'dark') root.classList.add('dark')
     if (theme === 'gray') root.classList.add('gray')
   }, [fontSize, theme])
   
@@ -55,7 +53,7 @@ export function App() {
         announcer.announce('An error occurred. Please try again.', 'assertive')
       }}
     >
-      <div className="h-screen bg-background overflow-x-hidden" role="main" aria-label="BrowserOS Chat Assistant">
+      <div className="h-screen bg-background overflow-x-hidden" role="main" aria-label="Nemo Chat Assistant">
         <SkipLink />
         <Chat isConnected={connected} />
         {humanInputRequest && (

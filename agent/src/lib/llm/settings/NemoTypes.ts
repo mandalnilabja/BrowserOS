@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
 /**
- * BrowserOS Provider type enum
+ * NemoProviderTypeSchema type enum
  */
-export const BrowserOSProviderTypeSchema = z.enum([
-  'browseros',
+export const NemoProviderTypeSchema = z.enum([
+  'nemo',
   'openai',
   'openai_compatible',
   'anthropic',
@@ -13,7 +13,7 @@ export const BrowserOSProviderTypeSchema = z.enum([
   'openrouter',
   'custom'
 ])
-export type BrowserOSProviderType = z.infer<typeof BrowserOSProviderTypeSchema>
+export type NemoProviderType = z.infer<typeof NemoProviderTypeSchema>
 
 /**
  * Provider capabilities configuration
@@ -37,12 +37,12 @@ export const ModelConfigSchema = z.object({
 })
 
 /**
- * Individual provider configuration from BrowserOS
+ * Individual provider configuration from Nemo
  */
-export const BrowserOSProviderSchema = z.object({
+export const NemoProviderSchema = z.object({
   id: z.string(),  // Unique provider identifier
   name: z.string(),  // Display name for the provider
-  type: BrowserOSProviderTypeSchema,  // Provider type
+  type: NemoProviderTypeSchema,  // Provider type
   isDefault: z.boolean(),  // Whether this is the default provider
   isBuiltIn: z.boolean(),  // Whether this is a built-in provider
   baseUrl: z.string().optional(),  // API base URL
@@ -54,32 +54,32 @@ export const BrowserOSProviderSchema = z.object({
   updatedAt: z.string()  // ISO timestamp of last update
 })
 
-export type BrowserOSProvider = z.infer<typeof BrowserOSProviderSchema>
+export type NemoProvider = z.infer<typeof NemoProviderSchema>
 
 /**
- * Complete BrowserOS providers configuration
+ * Complete Nemo providers configuration
  */
-export const BrowserOSProvidersConfigSchema = z.object({
+export const NemoProvidersConfigSchema = z.object({
   defaultProviderId: z.string(),  // ID of the default provider
-  providers: z.array(BrowserOSProviderSchema)  // List of all providers
+  providers: z.array(NemoProviderSchema)  // List of all providers
 })
 
-export type BrowserOSProvidersConfig = z.infer<typeof BrowserOSProvidersConfigSchema>
+export type NemoProvidersConfig = z.infer<typeof NemoProvidersConfigSchema>
 
 /**
  * Preference object returned by chrome.browserOS.getPref
  */
-export const BrowserOSPrefObjectSchema = z.object({
+export const NemoPrefObjectSchema = z.object({
   key: z.string(),  // Preference key
   type: z.string(),  // Preference type
   value: z.any()  // Preference value (string for JSON preferences)
 })
 
-export type BrowserOSPrefObject = z.infer<typeof BrowserOSPrefObjectSchema>
+export type NemoPrefObject = z.infer<typeof NemoPrefObjectSchema>
 
 /**
- * Browser preference keys for BrowserOS
+ * Browser preference keys for Nemo
  */
 export const BROWSEROS_PREFERENCE_KEYS = {
-  PROVIDERS: 'browseros.providers'
+  PROVIDERS: 'nemo.providers'
 } as const

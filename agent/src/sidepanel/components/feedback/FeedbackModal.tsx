@@ -97,7 +97,7 @@ export const FeedbackModal = memo<FeedbackModalProps>(function FeedbackModal({
         <form onSubmit={handleSubmit} className="p-4">
           <div className="space-y-3">
             <p className="text-xs text-muted-foreground">
-              Tell us what went wrong so we can improve BrowserOS-agent.
+              Tell us what went wrong so we can improve Nemo-agent.
             </p>
             
             <div className="space-y-2">

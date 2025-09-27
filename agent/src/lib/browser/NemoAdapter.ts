@@ -21,7 +21,7 @@ export type SnapshotSection = chrome.browserOS.SnapshotSection;
 export type Snapshot = chrome.browserOS.Snapshot;
 export type SnapshotOptions = chrome.browserOS.SnapshotOptions;
 
-// ============= BrowserOS Adapter =============
+// ============= Nemo Adapter =============
 
 // Screenshot size constants
 export const SCREENSHOT_SIZES = {
@@ -33,22 +33,22 @@ export const SCREENSHOT_SIZES = {
 export type ScreenshotSizeKey = keyof typeof SCREENSHOT_SIZES;
 
 /**
- * Adapter for Chrome BrowserOS Extension APIs
+ * Adapter for Chrome Nemo Extension APIs
  * Provides a clean interface to browserOS functionality with extensibility
  */
-export class BrowserOSAdapter {
-  private static instance: BrowserOSAdapter | null = null;
+export class NemoAdapter {
+  private static instance: NemoAdapter | null = null;
 
   private constructor() {}
 
   /**
    * Get singleton instance
    */
-  static getInstance(): BrowserOSAdapter {
-    if (!BrowserOSAdapter.instance) {
-      BrowserOSAdapter.instance = new BrowserOSAdapter();
+  static getInstance(): NemoAdapter {
+    if (!NemoAdapter.instance) {
+      NemoAdapter.instance = new NemoAdapter();
     }
-    return BrowserOSAdapter.instance;
+    return NemoAdapter.instance;
   }
 
   /**
@@ -60,7 +60,7 @@ export class BrowserOSAdapter {
   ): Promise<InteractiveSnapshot> {
     try {
       console.log(
-        `[BrowserOSAdapter] Getting interactive snapshot for tab ${tabId} with options: ${JSON.stringify(options)}`,
+        `[NemoAdapter] Getting interactive snapshot for tab ${tabId} with options: ${JSON.stringify(options)}`,
       );
 
       return new Promise<InteractiveSnapshot>((resolve, reject) => {
@@ -73,7 +73,7 @@ export class BrowserOSAdapter {
                 reject(new Error(chrome.runtime.lastError.message));
               } else {
                 console.log(
-                  `[BrowserOSAdapter] Retrieved snapshot with ${snapshot.elements.length} elements`,
+                  `[NemoAdapter] Retrieved snapshot with ${snapshot.elements.length} elements`,
                 );
                 resolve(snapshot);
               }
@@ -87,7 +87,7 @@ export class BrowserOSAdapter {
                 reject(new Error(chrome.runtime.lastError.message));
               } else {
                 console.log(
-                  `[BrowserOSAdapter] Retrieved snapshot with ${snapshot.elements.length} elements`,
+                  `[NemoAdapter] Retrieved snapshot with ${snapshot.elements.length} elements`,
                 );
                 resolve(snapshot);
               }
@@ -99,7 +99,7 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to get interactive snapshot: ${errorMessage}`,
+        `[NemoAdapter] Failed to get interactive snapshot: ${errorMessage}`,
       );
       throw new Error(`Failed to get interactive snapshot: ${errorMessage}`);
     }
@@ -110,7 +110,7 @@ export class BrowserOSAdapter {
    */
   async click(tabId: number, nodeId: number): Promise<void> {
     try {
-      console.log(`[BrowserOSAdapter] Clicking node ${nodeId} in tab ${tabId}`);
+      console.log(`[NemoAdapter] Clicking node ${nodeId} in tab ${tabId}`);
 
       return new Promise<void>((resolve, reject) => {
         chrome.browserOS.click(tabId, nodeId, () => {
@@ -124,7 +124,7 @@ export class BrowserOSAdapter {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      console.error(`[BrowserOSAdapter] Failed to click node: ${errorMessage}`);
+      console.error(`[NemoAdapter] Failed to click node: ${errorMessage}`);
       throw new Error(`Failed to click node ${nodeId}: ${errorMessage}`);
     }
   }
@@ -135,7 +135,7 @@ export class BrowserOSAdapter {
   async inputText(tabId: number, nodeId: number, text: string): Promise<void> {
     try {
       console.log(
-        `[BrowserOSAdapter] Inputting text into node ${nodeId} in tab ${tabId}`,
+        `[NemoAdapter] Inputting text into node ${nodeId} in tab ${tabId}`,
       );
 
       return new Promise<void>((resolve, reject) => {
@@ -150,7 +150,7 @@ export class BrowserOSAdapter {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      console.error(`[BrowserOSAdapter] Failed to input text: ${errorMessage}`);
+      console.error(`[NemoAdapter] Failed to input text: ${errorMessage}`);
       throw new Error(
         `Failed to input text into node ${nodeId}: ${errorMessage}`,
       );
@@ -162,7 +162,7 @@ export class BrowserOSAdapter {
    */
   async clear(tabId: number, nodeId: number): Promise<void> {
     try {
-      console.log(`[BrowserOSAdapter] Clearing node ${nodeId} in tab ${tabId}`);
+      console.log(`[NemoAdapter] Clearing node ${nodeId} in tab ${tabId}`);
 
       return new Promise<void>((resolve, reject) => {
         chrome.browserOS.clear(tabId, nodeId, () => {
@@ -176,7 +176,7 @@ export class BrowserOSAdapter {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      console.error(`[BrowserOSAdapter] Failed to clear node: ${errorMessage}`);
+      console.error(`[NemoAdapter] Failed to clear node: ${errorMessage}`);
       throw new Error(`Failed to clear node ${nodeId}: ${errorMessage}`);
     }
   }
@@ -187,7 +187,7 @@ export class BrowserOSAdapter {
   async scrollToNode(tabId: number, nodeId: number): Promise<boolean> {
     try {
       console.log(
-        `[BrowserOSAdapter] Scrolling to node ${nodeId} in tab ${tabId}`,
+        `[NemoAdapter] Scrolling to node ${nodeId} in tab ${tabId}`,
       );
 
       return new Promise<boolean>((resolve, reject) => {
@@ -203,7 +203,7 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to scroll to node: ${errorMessage}`,
+        `[NemoAdapter] Failed to scroll to node: ${errorMessage}`,
       );
       throw new Error(`Failed to scroll to node ${nodeId}: ${errorMessage}`);
     }
@@ -214,7 +214,7 @@ export class BrowserOSAdapter {
    */
   async sendKeys(tabId: number, keys: chrome.browserOS.Key): Promise<void> {
     try {
-      console.log(`[BrowserOSAdapter] Sending keys "${keys}" to tab ${tabId}`);
+      console.log(`[NemoAdapter] Sending keys "${keys}" to tab ${tabId}`);
 
       return new Promise<void>((resolve, reject) => {
         chrome.browserOS.sendKeys(tabId, keys, () => {
@@ -228,7 +228,7 @@ export class BrowserOSAdapter {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      console.error(`[BrowserOSAdapter] Failed to send keys: ${errorMessage}`);
+      console.error(`[NemoAdapter] Failed to send keys: ${errorMessage}`);
       throw new Error(`Failed to send keys: ${errorMessage}`);
     }
   }
@@ -239,7 +239,7 @@ export class BrowserOSAdapter {
   async getPageLoadStatus(tabId: number): Promise<PageLoadStatus> {
     try {
       console.log(
-        `[BrowserOSAdapter] Getting page load status for tab ${tabId}`,
+        `[NemoAdapter] Getting page load status for tab ${tabId}`,
       );
 
       return new Promise<PageLoadStatus>((resolve, reject) => {
@@ -255,7 +255,7 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to get page load status: ${errorMessage}`,
+        `[NemoAdapter] Failed to get page load status: ${errorMessage}`,
       );
       throw new Error(`Failed to get page load status: ${errorMessage}`);
     }
@@ -269,7 +269,7 @@ export class BrowserOSAdapter {
   ): Promise<chrome.browserOS.AccessibilityTree> {
     try {
       console.log(
-        `[BrowserOSAdapter] Getting accessibility tree for tab ${tabId}`,
+        `[NemoAdapter] Getting accessibility tree for tab ${tabId}`,
       );
 
       return new Promise<chrome.browserOS.AccessibilityTree>(
@@ -290,7 +290,7 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to get accessibility tree: ${errorMessage}`,
+        `[NemoAdapter] Failed to get accessibility tree: ${errorMessage}`,
       );
       throw new Error(`Failed to get accessibility tree: ${errorMessage}`);
     }
@@ -316,7 +316,7 @@ export class BrowserOSAdapter {
       const highlightDesc = showHighlights ? " with highlights" : "";
       const dimensionsDesc = width && height ? ` (${width}x${height})` : "";
       console.log(
-        `[BrowserOSAdapter] Capturing screenshot for tab ${tabId}${sizeDesc}${highlightDesc}${dimensionsDesc}`,
+        `[NemoAdapter] Capturing screenshot for tab ${tabId}${sizeDesc}${highlightDesc}${dimensionsDesc}`,
       );
 
       return new Promise<string>((resolve, reject) => {
@@ -333,7 +333,7 @@ export class BrowserOSAdapter {
                 reject(new Error(chrome.runtime.lastError.message));
               } else {
                 console.log(
-                  `[BrowserOSAdapter] Screenshot captured for tab ${tabId} (${width}x${height})${highlightDesc}`,
+                  `[NemoAdapter] Screenshot captured for tab ${tabId} (${width}x${height})${highlightDesc}`,
                 );
                 resolve(dataUrl);
               }
@@ -352,7 +352,7 @@ export class BrowserOSAdapter {
                   reject(new Error(chrome.runtime.lastError.message));
                 } else {
                   console.log(
-                    `[BrowserOSAdapter] Screenshot captured for tab ${tabId}${sizeDesc}${highlightDesc}`,
+                    `[NemoAdapter] Screenshot captured for tab ${tabId}${sizeDesc}${highlightDesc}`,
                   );
                   resolve(dataUrl);
                 }
@@ -367,7 +367,7 @@ export class BrowserOSAdapter {
                   reject(new Error(chrome.runtime.lastError.message));
                 } else {
                   console.log(
-                    `[BrowserOSAdapter] Screenshot captured for tab ${tabId} (${size}: ${pixelSize}px)`,
+                    `[NemoAdapter] Screenshot captured for tab ${tabId} (${size}: ${pixelSize}px)`,
                   );
                   resolve(dataUrl);
                 }
@@ -381,7 +381,7 @@ export class BrowserOSAdapter {
               reject(new Error(chrome.runtime.lastError.message));
             } else {
               console.log(
-                `[BrowserOSAdapter] Screenshot captured for tab ${tabId}`,
+                `[NemoAdapter] Screenshot captured for tab ${tabId}`,
               );
               resolve(dataUrl);
             }
@@ -392,7 +392,7 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to capture screenshot: ${errorMessage}`,
+        `[NemoAdapter] Failed to capture screenshot: ${errorMessage}`,
       );
       throw new Error(`Failed to capture screenshot: ${errorMessage}`);
     }
@@ -408,7 +408,7 @@ export class BrowserOSAdapter {
   ): Promise<Snapshot> {
     try {
       console.log(
-        `[BrowserOSAdapter] Getting ${type} snapshot for tab ${tabId} with options: ${JSON.stringify(options)}`,
+        `[NemoAdapter] Getting ${type} snapshot for tab ${tabId} with options: ${JSON.stringify(options)}`,
       );
 
       return new Promise<Snapshot>((resolve, reject) => {
@@ -422,7 +422,7 @@ export class BrowserOSAdapter {
                 reject(new Error(chrome.runtime.lastError.message));
               } else {
                 console.log(
-                  `[BrowserOSAdapter] Retrieved ${type} snapshot with ${snapshot.sections.length} sections`,
+                  `[NemoAdapter] Retrieved ${type} snapshot with ${snapshot.sections.length} sections`,
                 );
                 resolve(snapshot);
               }
@@ -434,7 +434,7 @@ export class BrowserOSAdapter {
               reject(new Error(chrome.runtime.lastError.message));
             } else {
               console.log(
-                `[BrowserOSAdapter] Retrieved ${type} snapshot with ${snapshot.sections.length} sections`,
+                `[NemoAdapter] Retrieved ${type} snapshot with ${snapshot.sections.length} sections`,
               );
               resolve(snapshot);
             }
@@ -445,7 +445,7 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to get ${type} snapshot: ${errorMessage}`,
+        `[NemoAdapter] Failed to get ${type} snapshot: ${errorMessage}`,
       );
       throw new Error(`Failed to get ${type} snapshot: ${errorMessage}`);
     }
@@ -474,15 +474,15 @@ export class BrowserOSAdapter {
   }
 
   /**
-   * Generic method to invoke any BrowserOS API
+   * Generic method to invoke any Nemo API
    * Useful for future APIs or experimental features
    */
   async invokeAPI(method: string, ...args: any[]): Promise<any> {
     try {
-      console.log(`[BrowserOSAdapter] Invoking BrowserOS API: ${method}`);
+      console.log(`[NemoAdapter] Invoking Nemo API: ${method}`);
 
       if (!(method in chrome.browserOS)) {
-        throw new Error(`Unknown BrowserOS API method: ${method}`);
+        throw new Error(`Unknown Nemo API method: ${method}`);
       }
 
       // @ts-expect-error - Dynamic API invocation
@@ -492,10 +492,10 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to invoke API ${method}: ${errorMessage}`,
+        `[NemoAdapter] Failed to invoke API ${method}: ${errorMessage}`,
       );
       throw new Error(
-        `Failed to invoke BrowserOS API ${method}: ${errorMessage}`,
+        `Failed to invoke Nemo API ${method}: ${errorMessage}`,
       );
     }
   }
@@ -508,7 +508,7 @@ export class BrowserOSAdapter {
   }
 
   /**
-   * Get list of available BrowserOS APIs
+   * Get list of available Nemo
    */
   getAvailableAPIs(): string[] {
     return Object.keys(chrome.browserOS).filter((key) => {
@@ -518,11 +518,11 @@ export class BrowserOSAdapter {
   }
 
   /**
-   * Get BrowserOS version information
+   * Get Nemoion information
    */
   async getVersion(): Promise<string | null> {
     try {
-      console.log("[BrowserOSAdapter] Getting BrowserOS version");
+      console.log("[Nemoer] Getting Nemoion");
 
       return new Promise<string | null>((resolve, reject) => {
         // Check if getVersionNumber API is available
@@ -534,7 +534,7 @@ export class BrowserOSAdapter {
             if (chrome.runtime.lastError) {
               reject(new Error(chrome.runtime.lastError.message));
             } else {
-              console.log(`[BrowserOSAdapter] BrowserOS version: ${version}`);
+              console.log(`[Nemoersion: $Nemo`);
               resolve(version);
             }
           });
@@ -547,7 +547,7 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to get version: ${errorMessage}`,
+        `[Nemoailed to get version: ${errorMessage}`,
       );
       // Return null on error
       return null;
@@ -563,7 +563,7 @@ export class BrowserOSAdapter {
   ): Promise<void> {
     try {
       console.log(
-        `[BrowserOSAdapter] Logging metric: ${eventName} with properties: ${JSON.stringify(properties)}`,
+        `[Nemoer] Logging metric: ${eventName} with properties: ${JSON.stringify(properties)}`,
       );
 
       return new Promise<void>((resolve, reject) => {
@@ -577,7 +577,7 @@ export class BrowserOSAdapter {
               if (chrome.runtime.lastError) {
                 reject(new Error(chrome.runtime.lastError.message));
               } else {
-                console.log(`[BrowserOSAdapter] Metric logged: ${eventName}`);
+                console.log(`[NemoAdapter] Metric logged: ${eventName}`);
                 resolve();
               }
             });
@@ -586,7 +586,7 @@ export class BrowserOSAdapter {
               if (chrome.runtime.lastError) {
                 reject(new Error(chrome.runtime.lastError.message));
               } else {
-                console.log(`[BrowserOSAdapter] Metric logged: ${eventName}`);
+                console.log(`[NemoAdapter] Metric logged: ${eventName}`);
                 resolve();
               }
             });
@@ -594,7 +594,7 @@ export class BrowserOSAdapter {
         } else {
           // If API not available, log a warning but don't fail
           console.warn(
-            `[BrowserOSAdapter] logMetric API not available, skipping metric: ${eventName}`,
+            `[NemoAdapter] logMetric API not available, skipping metric: ${eventName}`,
           );
           resolve();
         }
@@ -602,7 +602,7 @@ export class BrowserOSAdapter {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      console.error(`[BrowserOSAdapter] Failed to log metric: ${errorMessage}`);
+      console.error(`[NemoAdapter] Failed to log metric: ${errorMessage}`);
       return;
     }
   }
@@ -616,7 +616,7 @@ export class BrowserOSAdapter {
   async executeJavaScript(tabId: number, code: string): Promise<any> {
     try {
       console.log(
-        `[BrowserOSAdapter] Executing JavaScript in tab ${tabId}`,
+        `[NemoAdapter] Executing JavaScript in tab ${tabId}`,
       );
 
       return new Promise<any>((resolve, reject) => {
@@ -630,7 +630,7 @@ export class BrowserOSAdapter {
               reject(new Error(chrome.runtime.lastError.message));
             } else {
               console.log(
-                `[BrowserOSAdapter] JavaScript executed successfully in tab ${tabId}`,
+                `[NemoAdapter] JavaScript executed successfully in tab ${tabId}`,
               );
               resolve(result);
             }
@@ -643,7 +643,7 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to execute JavaScript: ${errorMessage}`,
+        `[NemoAdapter] Failed to execute JavaScript: ${errorMessage}`,
       );
       throw new Error(`Failed to execute JavaScript: ${errorMessage}`);
     }
@@ -658,7 +658,7 @@ export class BrowserOSAdapter {
   async clickCoordinates(tabId: number, x: number, y: number): Promise<void> {
     try {
       console.log(
-        `[BrowserOSAdapter] Clicking at coordinates (${x}, ${y}) in tab ${tabId}`,
+        `[NemoAdapter] Clicking at coordinates (${x}, ${y}) in tab ${tabId}`,
       );
 
       return new Promise<void>((resolve, reject) => {
@@ -672,7 +672,7 @@ export class BrowserOSAdapter {
               reject(new Error(chrome.runtime.lastError.message));
             } else {
               console.log(
-                `[BrowserOSAdapter] Successfully clicked at (${x}, ${y}) in tab ${tabId}`,
+                `[NemoAdapter] Successfully clicked at (${x}, ${y}) in tab ${tabId}`,
               );
               resolve();
             }
@@ -685,7 +685,7 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to click at coordinates: ${errorMessage}`,
+        `[NemoAdapter] Failed to click at coordinates: ${errorMessage}`,
       );
       throw new Error(`Failed to click at coordinates (${x}, ${y}): ${errorMessage}`);
     }
@@ -706,7 +706,7 @@ export class BrowserOSAdapter {
   ): Promise<void> {
     try {
       console.log(
-        `[BrowserOSAdapter] Typing at coordinates (${x}, ${y}) in tab ${tabId}`,
+        `[NemoAdapter] Typing at coordinates (${x}, ${y}) in tab ${tabId}`,
       );
 
       return new Promise<void>((resolve, reject) => {
@@ -720,7 +720,7 @@ export class BrowserOSAdapter {
               reject(new Error(chrome.runtime.lastError.message));
             } else {
               console.log(
-                `[BrowserOSAdapter] Successfully typed "${text}" at (${x}, ${y}) in tab ${tabId}`,
+                `[NemoAdapter] Successfully typed "${text}" at (${x}, ${y}) in tab ${tabId}`,
               );
               resolve();
             }
@@ -733,7 +733,7 @@ export class BrowserOSAdapter {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(
-        `[BrowserOSAdapter] Failed to type at coordinates: ${errorMessage}`,
+        `[NemoAdapter] Failed to type at coordinates: ${errorMessage}`,
       );
       throw new Error(
         `Failed to type at coordinates (${x}, ${y}): ${errorMessage}`,
@@ -743,4 +743,4 @@ export class BrowserOSAdapter {
 }
 
 // Export singleton instance getter for convenience
-export const getBrowserOSAdapter = () => BrowserOSAdapter.getInstance();
+export const getNemoAdapter = () => NemoAdapter.getInstance();

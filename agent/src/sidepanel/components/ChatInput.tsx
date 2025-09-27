@@ -10,7 +10,7 @@ import { useSidePanelPortMessaging } from '@/sidepanel/hooks'
 import { MessageType } from '@/lib/types/messaging'
 import { cn } from '@/sidepanel/lib/utils'
 import { Loader } from 'lucide-react'
-import { BrowserOSProvidersConfig, BrowserOSProvider } from '@/lib/llm/settings/browserOSTypes'
+import { NemoProvidersConfig, NemoProvider } from '@/lib/llm/settings/NemoTypes'
 import { ModeToggle } from './ModeToggle'
 // Tailwind classes used in ModeToggle; no separate CSS import
 import { SlashCommandPalette } from './SlashCommandPalette'
@@ -56,7 +56,7 @@ export function ChatInput({ isConnected, isProcessing }: ChatInputProps) {
   
   // Provider health: only consider UI connected if current default provider is usable
   useEffect(() => {
-    const computeOk = (cfg: BrowserOSProvidersConfig) => {
+    const computeOk = (cfg: NemoProvidersConfig) => {
       const def = cfg.providers.find(p => p.id === cfg.defaultProviderId)
       setProviderOk(isProviderUsable(def || null))
     }
@@ -64,7 +64,7 @@ export function ChatInput({ isConnected, isProcessing }: ChatInputProps) {
     const handleWorkflow = (payload: any) => {
       // Only update when explicit providers config is present
       if (payload && payload.data && payload.data.providersConfig) {
-        computeOk(payload.data.providersConfig as BrowserOSProvidersConfig)
+        computeOk(payload.data.providersConfig as NemoProvidersConfig)
       }
     }
 
@@ -72,7 +72,7 @@ export function ChatInput({ isConnected, isProcessing }: ChatInputProps) {
     return () => removeMessageListener<any>(MessageType.WORKFLOW_STATUS, handleWorkflow)
   }, [addMessageListener, removeMessageListener])
 
-  const isProviderUsable = (provider: BrowserOSProvider | null): boolean => {
+  const isProviderUsable = (provider: NemoProvider | null): boolean => {
     // If the provider exists in the list, treat it as usable regardless of field completeness
     return !!provider
   }

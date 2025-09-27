@@ -1,6 +1,6 @@
 import { MessageType } from '@/lib/types/messaging'
 import { isDevelopmentMode } from '@/config'
-import { getBrowserOSAdapter } from '@/lib/browser/BrowserOSAdapter'
+import { getNemoAdapter } from '@/lib/browser/NemoAdapter'
 import { z } from 'zod'
 import posthog from 'posthog-js'
 
@@ -36,7 +36,7 @@ interface LogUtilityOptions {
 export class Logging {
   private static connectedPorts = new Map<string, chrome.runtime.Port>()
   private static debugMode = false
-  private static browserOSAdapter = getBrowserOSAdapter()
+  private static browserOSAdapter = getNemoAdapter()
   private static posthogInitialized = false
   private static posthogApiKey = process.env.POSTHOG_API_KEY
   
@@ -158,7 +158,7 @@ export class Logging {
   }
 
   /**
-   * Log a metric event using the BrowserOS metrics API with PostHog fallback
+   * Log a metric event using the Nemo metrics API with PostHog fallback
    * @param eventName - Name of the event (will be prefixed with "agent.")
    * @param properties - Optional properties to include with the event
    * @param sampling - Sampling rate between 0 and 1 (default 1.0 = 100%)
@@ -188,7 +188,7 @@ export class Logging {
     try {
       await this.browserOSAdapter.logMetric(prefixedEventName, enhancedProperties)
     } catch (error) {
-      // BrowserOS failed, use PostHog fallback
+      // Nemo failed, use PostHog fallback
       if (this.posthogApiKey && this.posthogInitialized) {
         try {
           posthog.capture('agent.metric_api_failed', { event: eventName, ...(version && { version }) })

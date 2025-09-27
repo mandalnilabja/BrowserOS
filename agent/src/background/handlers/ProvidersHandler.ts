@@ -2,7 +2,7 @@ import { MessageType } from '@/lib/types/messaging'
 import { PortMessage } from '@/lib/runtime/PortMessaging'
 import { LLMSettingsReader } from '@/lib/llm/settings/LLMSettingsReader'
 import { langChainProvider } from '@/lib/llm/LangChainProvider'
-import { BrowserOSProvidersConfigSchema, BROWSEROS_PREFERENCE_KEYS } from '@/lib/llm/settings/browserOSTypes'
+import { NemoProvidersConfigSchema, BROWSEROS_PREFERENCE_KEYS } from '@/lib/llm/settings/NemoTypes'
 import { Logging } from '@/lib/utils/Logging'
 
 /**
@@ -55,7 +55,7 @@ export class ProvidersHandler {
     port: chrome.runtime.Port
   ): void {
     try {
-      const config = BrowserOSProvidersConfigSchema.parse(message.payload)
+      const config = NemoProvidersConfigSchema.parse(message.payload)
       const browserOS = (chrome as any)?.browserOS as { 
         setPref?: (name: string, value: any, pageId?: string, cb?: (ok: boolean) => void) => void 
       } | undefined

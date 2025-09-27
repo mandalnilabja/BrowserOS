@@ -15,7 +15,7 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai"
 import { BaseChatModel } from "@langchain/core/language_models/chat_models"
 import { BaseMessage } from "@langchain/core/messages"
 import { LLMSettingsReader } from "@/lib/llm/settings/LLMSettingsReader"
-import { BrowserOSProvider } from '@/lib/llm/settings/browserOSTypes'
+import { NemoProvider } from '@/lib/llm/settings/NemoTypes'
 import { Logging } from '@/lib/utils/Logging'
 
 // Default constants
@@ -39,7 +39,7 @@ export interface ModelCapabilities {
 
 export class LangChainProvider {
   private static instance: LangChainProvider
-  private currentProvider: BrowserOSProvider | null = null
+  private currentProvider: NemoProvider | null = null
   
   // Skip token counting flag - set to true for maximum speed (returns fixed estimates)
   private static readonly SKIP_TOKEN_COUNTING = false
@@ -92,8 +92,8 @@ export class LangChainProvider {
     } else {
       // Otherwise determine based on provider type and model
       switch (provider.type) {
-        case 'browseros':
-          // BrowserOS/Nxtscape uses gemini 2.5 flash by default
+        case 'nemo':
+          // Nemo/Nxtscape uses gemini 2.5 flash by default
           maxTokens = 1_000_000
           break
 
@@ -149,7 +149,7 @@ export class LangChainProvider {
     return { maxTokens, supportsImages }
   }
   
-  getCurrentProvider(): BrowserOSProvider | null {
+  getCurrentProvider(): NemoProvider | null {
     return this.currentProvider
   }
   
@@ -164,7 +164,7 @@ export class LangChainProvider {
   
   private _getDefaultModelForProvider(type: string): string {
     switch (type) {
-      case 'browseros':
+      case 'nemo':
         return DEFAULT_BROWSEROS_MODEL
       case 'openai':
       case 'openai_compatible':
@@ -184,7 +184,7 @@ export class LangChainProvider {
 
   private _getDefaultImageSupport(type: string): boolean {
     switch (type) {
-      case 'browseros':
+      case 'nemo':
       case 'openai':
       case 'openai_compatible':
       case 'anthropic':
@@ -269,7 +269,7 @@ export class LangChainProvider {
    * @returns Calculated max tokens for the response
    */
   private _calculateMaxTokens(
-    provider: BrowserOSProvider,
+    provider: NemoProvider,
     requestedMaxTokens?: number
   ): number {
     const contextWindow = provider.modelConfig?.contextWindow
@@ -290,7 +290,7 @@ export class LangChainProvider {
   }
   
   private _createLLMFromProvider(
-    provider: BrowserOSProvider,
+    provider: NemoProvider,
     options?: { temperature?: number; maxTokens?: number }
   ): BaseChatModel {
     // Extract parameters from provider config first, then override with options
@@ -304,8 +304,8 @@ export class LangChainProvider {
     
     // Map provider type to appropriate LangChain adapter
     switch (provider.type) {
-      case 'browseros':
-        return this._createBrowserOSLLM(temperature, maxTokens, streaming)
+      case 'nemo':
+        return this._createNemoLLM(temperature, maxTokens, streaming)
       
       case 'openai':
       case 'openai_compatible':
@@ -324,14 +324,14 @@ export class LangChainProvider {
       
       default:
         Logging.log('LangChainProvider', 
-          `Unknown provider type: ${provider.type}, falling back to BrowserOS`, 
+          `Unknown provider type: ${provider.type}, falling back to Nemo`, 
           'warning')
-        return this._createBrowserOSLLM(temperature, maxTokens, streaming)
+        return this._createNemoLLM(temperature, maxTokens, streaming)
     }
   }
   
-  // BrowserOS built-in provider (uses proxy, no API key needed)
-  private _createBrowserOSLLM(
+  // Nemo built-in provider (uses proxy, no API key needed)
+  private _createNemoLLM(
     temperature: number, 
     maxTokens?: number, 
     streaming: boolean = true
@@ -354,7 +354,7 @@ export class LangChainProvider {
   
   // OpenAI-compatible providers (OpenAI, OpenAI-compatible, OpenRouter, Custom)
   private _createOpenAICompatibleLLM(
-    provider: BrowserOSProvider,
+    provider: NemoProvider,
     temperature: number,
     maxTokens?: number,
     streaming: boolean = true
@@ -399,7 +399,7 @@ export class LangChainProvider {
   
   // Anthropic provider
   private _createAnthropicLLM(
-    provider: BrowserOSProvider,
+    provider: NemoProvider,
     temperature: number,
     maxTokens?: number,
     streaming: boolean = true
@@ -422,7 +422,7 @@ export class LangChainProvider {
   
   // Google Gemini provider
   private _createGeminiLLM(
-    provider: BrowserOSProvider,
+    provider: NemoProvider,
     temperature: number,
     maxTokens?: number
   ): ChatGoogleGenerativeAI {
@@ -443,7 +443,7 @@ export class LangChainProvider {
   
   // Ollama provider (local, no API key required)
   private _createOllamaLLM(
-    provider: BrowserOSProvider,
+    provider: NemoProvider,
     temperature: number,
     maxTokens?: number
   ): ChatOllama {

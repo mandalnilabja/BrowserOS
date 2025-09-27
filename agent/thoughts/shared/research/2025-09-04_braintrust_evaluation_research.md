@@ -3,7 +3,7 @@ date: 2025-09-04T10:00:00-08:00
 researcher: Claude Code
 git_commit: 16e091db20ab1c17354729c34bef5ed75a1a200c
 branch: dev/evals2
-repository: BrowserOS-agent
+repository: Nemo-agent
 topic: "Braintrust Evaluation System Implementation"
 tags: [research, codebase, braintrust, telemetry, evaluation, llm-judge, experiments]
 status: complete
@@ -17,13 +17,13 @@ last_updated_by: Claude Code
 **Researcher**: Claude Code  
 **Git Commit**: 16e091db20ab1c17354729c34bef5ed75a1a200c  
 **Branch**: dev/evals2  
-**Repository**: BrowserOS-agent
+**Repository**: Nemo-agent
 
 ## Research Question
 Thoroughly research and understand how the Braintrust evaluation system is currently implemented in this codebase, including telemetry, tool wrapping, scoring, and experiment running.
 
 ## Summary
-The Braintrust evaluation system in BrowserOS-agent is a comprehensive telemetry and evaluation framework that tracks agent execution in real-time, scores task completion using an LLM judge, and enables A/B testing experiments. The system uses a singleton telemetry collector with lazy initialization, dynamic tool wrapping with Braintrust's `wrapTraced`, multi-dimensional scoring via OpenAI, and a replay mechanism for comparing different agent versions.
+The Braintrust evaluation system in Nemo-agent is a comprehensive telemetry and evaluation framework that tracks agent execution in real-time, scores task completion using an LLM judge, and enables A/B testing experiments. The system uses a singleton telemetry collector with lazy initialization, dynamic tool wrapping with Braintrust's `wrapTraced`, multi-dimensional scoring via OpenAI, and a replay mechanism for comparing different agent versions.
 
 ## Detailed Findings
 

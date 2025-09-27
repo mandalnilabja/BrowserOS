@@ -1,19 +1,19 @@
 /**
- * Re-export BrowserOS types as the primary configuration format
+ * Re-export Nemos as the primary configuration format
  * 
- * The new BrowserOS provider configuration is now the primary format.
+ * The new Nemoider configuration is now the primary format.
  * Legacy LLMSettings types have been removed in favor of the unified
- * BrowserOSProvider structure.
+ * NemoProvider structure.
  */
 export { 
-  BrowserOSProvider,
-  BrowserOSProvidersConfig,
-  BrowserOSProviderType,
-  BrowserOSProviderSchema,
-  BrowserOSProvidersConfigSchema,
-  BrowserOSPrefObject,
-  BrowserOSPrefObjectSchema,
+  NemoProvider,
+  NemoProvidersConfig,
+  NemoProviderType,
+  NemoProviderSchema,
+  NemoProvidersConfigSchema,
+  NemoPrefObject,
+  NemoPrefObjectSchema,
   ProviderCapabilitiesSchema,
   ModelConfigSchema,
   BROWSEROS_PREFERENCE_KEYS
-} from './browserOSTypes' 
+} from './NemoTypes' 

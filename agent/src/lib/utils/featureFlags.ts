@@ -1,4 +1,4 @@
-import { getBrowserOSAdapter } from '@/lib/browser/BrowserOSAdapter'
+import { getNemoAdapter } from '@/lib/browser/NemoAdapter'
 import { Logging } from '@/lib/utils/Logging'
 
 // Feature flag definitions with minimum version requirements
@@ -48,12 +48,12 @@ export class FeatureFlags {
     if (this.initialized) return
 
     try {
-      const adapter = getBrowserOSAdapter()
+      const adapter = getNemoAdapter()
       this.browserVersion = await adapter.getVersion()
       this.initialized = true
-      Logging.log('FeatureFlags', `Initialized with BrowserOS version: ${this.browserVersion}`)
+      Logging.log('FeatureFlags', `Initialized with Nemo version: ${this.browserVersion}`)
     } catch (error) {
-      Logging.log('FeatureFlags', `Failed to get BrowserOS version, using defaults: ${error}`)
+      Logging.log('FeatureFlags', `Failed to get Nemo version, using defaults: ${error}`)
       this.initialized = true
     }
   }

@@ -550,55 +550,6 @@ export const MessageItem = memo<MessageItemProps>(function MessageItem({ message
           </div>
         )
 
-      case 'plan_editor':
-        try {
-          const planData = JSON.parse(message.content)
-          
-          return (
-            <TaskManagerDropdown
-              content={planData.steps.map((step: any) => 
-                `- [ ] ${step.action}`
-              ).join('\n')}
-              isEditable={planData.isPreview !== false}  // Only editable if in preview mode
-              onTasksChange={(tasks: any[]) => {
-                const updatedSteps = tasks.map((task: any, index: number) => ({
-                  id: task.id,
-                  action: task.content,
-                  reasoning: '',
-                  order: index,
-                  isEditable: true
-                }))
-              }}
-              onExecute={(tasks: any[]) => {
-                const steps = tasks.map((task: any, index: number) => ({
-                  id: task.id,
-                  action: task.content,
-                  reasoning: '',
-                  order: index,
-                  isEditable: false
-                }))
-                
-                useChatStore.getState().publishPlanEditResponse({
-                  planId: planData.planId,
-                  action: 'execute',
-                  steps: steps
-                })
-              }}
-              onCancel={() => {
-                useChatStore.getState().publishPlanEditResponse({
-                  planId: planData.planId,
-                  action: 'cancel'
-                })
-              }}
-            />
-          )
-        } catch (error) {
-          return (
-            <div className="text-red-500 text-sm">
-              Error rendering plan editor: {error instanceof Error ? error.message : 'Unknown error'}
-            </div>
-          );
-        }
 
       default:
         // Fallback to markdown

@@ -11,7 +11,7 @@ export const CONFETTI_SCRIPT = `
 
   // Create container for all confetti
   const container = document.createElement('div');
-  container.id = 'browseros-confetti-container';
+  container.id = 'nemo-confetti-container';
   container.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:999999;overflow:hidden';
 
   // Create individual confetti pieces
@@ -40,7 +40,7 @@ export const CONFETTI_SCRIPT = `
 
   // Add animation keyframes
   const style = document.createElement('style');
-  style.id = 'browseros-confetti-styles';
+  style.id = 'nemo-confetti-styles';
   style.textContent = \`
     @keyframes confetti-fall {
       0% {
@@ -58,8 +58,8 @@ export const CONFETTI_SCRIPT = `
 
   // Cleanup after animation completes
   setTimeout(() => {
-    const containerEl = document.getElementById('browseros-confetti-container');
-    const styleEl = document.getElementById('browseros-confetti-styles');
+    const containerEl = document.getElementById('nemo-confetti-container');
+    const styleEl = document.getElementById('nemo-confetti-styles');
     if (containerEl) containerEl.remove();
     if (styleEl) styleEl.remove();
   }, 7000);

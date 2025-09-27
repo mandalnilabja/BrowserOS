@@ -1,23 +1,23 @@
 import { Logging } from '@/lib/utils/Logging'
 import { isMockLLMSettings } from '@/config'
 import { 
-  BrowserOSProvider,
-  BrowserOSProvidersConfig,
-  BrowserOSProvidersConfigSchema,
-  BrowserOSPrefObject,
+  NemoProvider,
+  NemoProvidersConfig,
+  NemoProvidersConfigSchema,
+  NemoPrefObject,
   BROWSEROS_PREFERENCE_KEYS
-} from './browserOSTypes'
+} from './NemoTypes'
 
 // Type definitions for chrome.browserOS API
 declare global {
-  interface ChromeBrowserOS {
-    getPref(name: string, callback: (pref: BrowserOSPrefObject) => void): void
+  interface ChromeNemo {
+    getPref(name: string, callback: (pref: NemoPrefObject) => void): void
     setPref(name: string, value: any, pageId?: string, callback?: (success: boolean) => void): void
-    getAllPrefs(callback: (prefs: BrowserOSPrefObject[]) => void): void
+    getAllPrefs(callback: (prefs: NemoPrefObject[]) => void): void
   }
   
   interface Chrome {
-    browserOS?: ChromeBrowserOS
+    browserOS?: ChromeNemo
   }
 }
 
@@ -29,37 +29,37 @@ const DEFAULT_OLLAMA_MODEL = 'qwen3:4b'
 const DEFAULT_OLLAMA_BASE_URL = 'http://localhost:11434'
 
 /**
- * Reads LLM provider settings from BrowserOS preferences
+ * Reads LLM provider settings from Nemo preferences
  */
 export class LLMSettingsReader {
-  private static mockProvider: BrowserOSProvider | null = null
+  private static mockProvider: NemoProvider | null = null
   
   /**
    * Set mock provider for testing (DEV MODE ONLY)
    * @param provider - Mock provider configuration
    */
-  static setMockProvider(provider: Partial<BrowserOSProvider>): void {
+  static setMockProvider(provider: Partial<NemoProvider>): void {
     if (!isMockLLMSettings()) {
       Logging.log('LLMSettingsReader', 'setMockProvider is only available in development mode', 'warning')
       return
     }
     
     this.mockProvider = {
-      ...this.getDefaultBrowserOSProvider(),
+      ...this.getDefaultNemoProvider(),
       ...provider
     }
     Logging.log('LLMSettingsReader', `Mock provider set: ${provider.name || provider.type}`)
   }
   /**
    * Read the default provider configuration
-   * @returns Promise resolving to the default BrowserOS provider
+   * @returns Promise resolving to the default Nemo provider
    */
-  static async read(): Promise<BrowserOSProvider> {
+  static async read(): Promise<NemoProvider> {
     try {
-      Logging.log('LLMSettingsReader', 'Reading provider settings from BrowserOS preferences')
+      Logging.log('LLMSettingsReader', 'Reading provider settings from Nemo preferences')
       
       // Try chrome.browserOS.getPref API
-      const provider = await this.readFromBrowserOS()
+      const provider = await this.readFromNemo()
       if (provider) {
         Logging.log('LLMSettingsReader', `Provider loaded: ${provider.name} (${provider.type})`)
         return provider
@@ -69,9 +69,9 @@ export class LLMSettingsReader {
       Logging.log('LLMSettingsReader', `Failed to read settings: ${errorMessage}`, 'error')
     }
     
-    // Return default BrowserOS provider if reading fails
-    const defaultProvider = this.getDefaultBrowserOSProvider()
-    Logging.log('LLMSettingsReader', 'Using default BrowserOS provider')
+    // Return default Nemo provider if reading fails
+    const defaultProvider = this.getDefaultNemoProvider()
+    Logging.log('LLMSettingsReader', 'Using default Nemo provider')
     return defaultProvider
   }
   
@@ -79,7 +79,7 @@ export class LLMSettingsReader {
    * Read all providers configuration
    * @returns Promise resolving to all providers configuration
    */
-  static async readAllProviders(): Promise<BrowserOSProvidersConfig> {
+  static async readAllProviders(): Promise<NemoProvidersConfig> {
     try {
       const config = await this.readProvidersConfig()
       if (config) {
@@ -91,10 +91,10 @@ export class LLMSettingsReader {
       Logging.log('LLMSettingsReader', `Failed to read providers: ${errorMessage}`, 'error')
     }
     
-    // Return default config with BrowserOS provider only
+    // Return default config with Nemo provider only
     return {
-      defaultProviderId: 'browseros',
-      providers: [this.getDefaultBrowserOSProvider()]
+      defaultProviderId: 'nemo',
+      providers: [this.getDefaultNemoProvider()]
     }
   }
   
@@ -102,9 +102,9 @@ export class LLMSettingsReader {
    * Read from chrome.browserOS.getPref API
    * @returns Promise resolving to the default provider or null
    */
-  private static async readFromBrowserOS(): Promise<BrowserOSProvider | null> {
+  private static async readFromNemo(): Promise<NemoProvider | null> {
     // Check if API is available
-    const browserOS = (chrome as any)?.browserOS as ChromeBrowserOS | undefined
+    const browserOS = (chrome as any)?.browserOS as ChromeNemo | undefined
     if (!browserOS?.getPref) {
       // Fallback: try chrome.storage.local
       try {
@@ -120,7 +120,7 @@ export class LLMSettingsReader {
           }
           return null
         }
-        const config = BrowserOSProvidersConfigSchema.parse(typeof raw === 'string' ? JSON.parse(raw) : raw)
+        const config = NemoProvidersConfigSchema.parse(typeof raw === 'string' ? JSON.parse(raw) : raw)
         const def = config.providers.find(p => p.id === config.defaultProviderId) || null
         return def
       } catch (e) {
@@ -132,8 +132,8 @@ export class LLMSettingsReader {
       }
     }
     
-    return new Promise<BrowserOSProvider | null>((resolve) => {
-      browserOS!.getPref(BROWSEROS_PREFERENCE_KEYS.PROVIDERS, (pref: BrowserOSPrefObject) => {
+    return new Promise<NemoProvider | null>((resolve) => {
+      browserOS!.getPref(BROWSEROS_PREFERENCE_KEYS.PROVIDERS, (pref: NemoPrefObject) => {
         if (chrome.runtime.lastError) {
           Logging.log('LLMSettingsReader', 
             `Failed to read preference: ${chrome.runtime.lastError.message}`, 'warning')
@@ -149,7 +149,7 @@ export class LLMSettingsReader {
         
         try {
           // Parse the JSON string
-          const config = BrowserOSProvidersConfigSchema.parse(JSON.parse(pref.value))
+          const config = NemoProvidersConfigSchema.parse(JSON.parse(pref.value))
           // Normalize isDefault flags for safety
           config.providers = config.providers.map(p => ({
             ...p,
@@ -178,8 +178,8 @@ export class LLMSettingsReader {
    * Read full providers configuration
    * @returns Promise resolving to providers config or null
    */
-  private static async readProvidersConfig(): Promise<BrowserOSProvidersConfig | null> {
-    const browserOS = (chrome as any)?.browserOS as ChromeBrowserOS | undefined
+  private static async readProvidersConfig(): Promise<NemoProvidersConfig | null> {
+    const browserOS = (chrome as any)?.browserOS as ChromeNemo | undefined
     if (!browserOS?.getPref) {
       // Fallback: try chrome.storage.local
       try {
@@ -189,21 +189,21 @@ export class LLMSettingsReader {
         })
         const raw = stored?.[key]
         if (!raw) return null
-        return BrowserOSProvidersConfigSchema.parse(typeof raw === 'string' ? JSON.parse(raw) : raw)
+        return NemoProvidersConfigSchema.parse(typeof raw === 'string' ? JSON.parse(raw) : raw)
       } catch (_e) {
         return null
       }
     }
     
-    return new Promise<BrowserOSProvidersConfig | null>((resolve) => {
-      browserOS!.getPref(BROWSEROS_PREFERENCE_KEYS.PROVIDERS, (pref: BrowserOSPrefObject) => {
+    return new Promise<NemoProvidersConfig | null>((resolve) => {
+      browserOS!.getPref(BROWSEROS_PREFERENCE_KEYS.PROVIDERS, (pref: NemoPrefObject) => {
         if (chrome.runtime.lastError || !pref?.value) {
           resolve(null)
           return
         }
         
         try {
-          const config = BrowserOSProvidersConfigSchema.parse(JSON.parse(pref.value))
+          const config = NemoProvidersConfigSchema.parse(JSON.parse(pref.value))
           // Normalize isDefault flags for safety
           config.providers = config.providers.map(p => ({
             ...p,
@@ -218,14 +218,14 @@ export class LLMSettingsReader {
   }
   
   /**
-   * Get default BrowserOS built-in provider
-   * @returns Default BrowserOS provider configuration
+   * Get default Nemo built-in provider
+   * @returns Default Nemo provider configuration
    */
-  private static getDefaultBrowserOSProvider(): BrowserOSProvider {
+  private static getDefaultNemoProvider(): NemoProvider {
     return {
-      id: 'browseros',
-      name: 'BrowserOS',
-      type: 'browseros',
+      id: 'nemo',
+      name: 'Nemo',
+      type: 'nemo',
       isDefault: true,
       isBuiltIn: true,
       createdAt: new Date().toISOString(),
@@ -237,17 +237,17 @@ export class LLMSettingsReader {
    * Get mock provider for development
    * @returns Mock provider configuration
    */
-  private static getMockProvider(): BrowserOSProvider {
+  private static getMockProvider(): NemoProvider {
     // Return custom mock if set
     if (this.mockProvider) {
       return this.mockProvider
     }
     
     // Can be overridden via environment
-    const mockType = process.env.MOCK_PROVIDER_TYPE || 'browseros'
+    const mockType = process.env.MOCK_PROVIDER_TYPE || 'nemo'
     
-    const mockProviders: Record<string, BrowserOSProvider> = {
-      browseros: this.getDefaultBrowserOSProvider(),
+    const mockProviders: Record<string, NemoProvider> = {
+      nemo: this.getDefaultNemoProvider(),
       openai: {
         id: 'mock_openai',
         name: 'Mock OpenAI',
@@ -304,7 +304,7 @@ export class LLMSettingsReader {
       }
     }
     
-    return mockProviders[mockType] || this.getDefaultBrowserOSProvider()
+    return mockProviders[mockType] || this.getDefaultNemoProvider()
   }
   
 } 

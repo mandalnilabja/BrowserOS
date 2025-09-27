@@ -2,13 +2,13 @@ import { z } from "zod";
 import { type BrowserContextConfig } from "./BrowserContext";
 import { Logging } from "../utils/Logging";
 import {
-  getBrowserOSAdapter,
+  getNemoAdapter,
   type InteractiveNode,
   type InteractiveSnapshot,
   type Snapshot,
   type SnapshotOptions,
   type ScreenshotSizeKey,
-} from "./BrowserOSAdapter";
+} from "./NemoAdapter";
 import { profileAsync } from "@/lib/utils/Profiler";
 import { ElementFormatter } from "./ElementFormatter";
 
@@ -18,7 +18,7 @@ const SIMPLIFIED_FORMATTER = new ElementFormatter(true); // Simplified format
 
 // Schema for interactive elements
 export const InteractiveElementSchema = z.object({
-  nodeId: z.number(), // Chrome BrowserOS node ID (sequential index)
+  nodeId: z.number(), // Chrome Nemo node ID (sequential index)
   text: z.string(), // Element text (axName or tag)
   tag: z.string(), // HTML tag name
 });
@@ -26,18 +26,18 @@ export const InteractiveElementSchema = z.object({
 export type InteractiveElement = z.infer<typeof InteractiveElementSchema>;
 
 /**
- * BrowserPage - Simple browser page wrapper using Chrome BrowserOS APIs
+ * BrowserPage - Simple browser page wrapper using Chrome Nemo APIs
  *
  * This class provides:
  * 1. Direct element access via index-based APIs
  * 2. Element formatting for tools
- * 3. Simple action methods using BrowserOSAdapter
+ * 3. Simple action methods using NemoAdapter
  */
 export class BrowserPage {
   private _tabId: number;
   private _url: string;
   private _title: string;
-  private _browserOS = getBrowserOSAdapter();
+  private _browserOS = getNemoAdapter();
 
   // Snapshot cache for the latest interactive snapshot
   private _snapshotCache: InteractiveSnapshot | null = null;
@@ -75,7 +75,7 @@ export class BrowserPage {
     }
   }
 
-  // ============= Core BrowserOS Integration =============
+  // ============= Core Nemo Integration =============
 
   /**
    * Invalidate the snapshot cache
@@ -580,7 +580,7 @@ export class BrowserPage {
     showHighlights?: boolean,
   ): Promise<string | null> {
     try {
-      // Return the full data URL directly from BrowserOS
+      // Return the full data URL directly from Nemo
       return await this._browserOS.captureScreenshot(
         this._tabId,
         size,
@@ -609,7 +609,7 @@ export class BrowserPage {
     showHighlights?: boolean,
   ): Promise<string | null> {
     try {
-      // Return the full data URL directly from BrowserOS with exact dimensions
+      // Return the full data URL directly from Nemo with exact dimensions
       return await this._browserOS.captureScreenshot(
         this._tabId,
         undefined, // size is undefined when using exact dimensions

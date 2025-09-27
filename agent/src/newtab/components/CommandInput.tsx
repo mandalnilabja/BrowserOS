@@ -12,7 +12,6 @@ interface CommandInputProps {
 export function CommandInput({ onCreateAgent }: CommandInputProps = {}) {
   const [value, setValue] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const [showCommandPalette, setShowCommandPalette] = useState(false)
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
   const [isExecutingAgent, setIsExecutingAgent] = useState(false)
   const [executingAgentName, setExecutingAgentName] = useState('')
@@ -40,7 +39,7 @@ export function CommandInput({ onCreateAgent }: CommandInputProps = {}) {
     if (!value.trim()) return
     
     // Don't submit if dropdowns are open
-    if (showCommandPalette || showSearchDropdown) return
+    if ( showSearchDropdown) return
     
     const query = value.trim()
     
@@ -65,7 +64,7 @@ export function CommandInput({ onCreateAgent }: CommandInputProps = {}) {
   
   // Simple placeholder
   const getPlaceholder = () => {
-    return 'Ask anything or type "/" to run agents'
+    return 'Ask anything interesting ...'
   }
   
   return (
@@ -87,14 +86,13 @@ export function CommandInput({ onCreateAgent }: CommandInputProps = {}) {
             setValue(newValue)
             
             // Show command palette when user types '/'
-            if (newValue === '/' || (newValue.startsWith('/') && showCommandPalette)) {
-              setShowCommandPalette(true)
-              setShowSearchDropdown(false)
-            } else {
-              setShowCommandPalette(false)
+            // if (newValue === '/' || (newValue.startsWith('/') && showCommandPalette)) {
+            //   setShowCommandPalette(true)
+            //   setShowSearchDropdown(false)
+            // } else {
               // Show search dropdown when there's text (not starting with '/')
-              setShowSearchDropdown(newValue.trim().length > 0)
-            }
+            setShowSearchDropdown(newValue.trim().length > 0)
+            // }
           }}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => {
@@ -115,7 +113,7 @@ export function CommandInput({ onCreateAgent }: CommandInputProps = {}) {
       </div>
       
       {/* Search Dropdown */}
-      {showSearchDropdown && !showCommandPalette && (
+      {showSearchDropdown && (
         <SearchDropdown
           query={value}
           onSelect={handleProviderSelect}
@@ -123,48 +121,6 @@ export function CommandInput({ onCreateAgent }: CommandInputProps = {}) {
         />
       )}
       
-      {/* Command Palette */}
-      {showCommandPalette && (
-        <CommandPalette
-          searchQuery={value}
-          onSelectAgent={async (agentId) => {
-            // Find and execute the agent immediately
-            const agent = agents.find(a => a.id === agentId)
-            if (agent) {
-              // Update UI to show agent is executing
-              setIsExecutingAgent(true)
-              setExecutingAgentName(agent.name)
-              setValue(`Executing agent: ${agent.name}`)
-              setShowCommandPalette(false)
-              
-              // Execute the agent with its goal as the query
-              console.log('Executing agent immediately:', agent.name)
-              await executeAgent(agent, agent.goal)
-              
-              // Reset after a short delay
-              setTimeout(() => {
-                setIsExecutingAgent(false)
-                setExecutingAgentName('')
-                setValue('')
-                inputRef.current?.focus()
-              }, 2000)
-            }
-          }}
-          onCreateAgent={() => {
-            // Navigate to agent creation view
-            if (onCreateAgent) {
-              onCreateAgent()
-            }
-            setValue('')
-            setShowCommandPalette(false)
-          }}
-          onClose={() => {
-            setShowCommandPalette(false)
-            setValue('')
-            inputRef.current?.focus()
-          }}
-        />
-      )}
     </form>
   )
 }

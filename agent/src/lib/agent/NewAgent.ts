@@ -2,7 +2,7 @@ import { ExecutionContext } from "@/lib/runtime/ExecutionContext";
 import { MessageManager, MessageManagerReadOnly, MessageType } from "@/lib/runtime/MessageManager";
 import { ToolManager } from "@/lib/tools/ToolManager";
 import { ExecutionMetadata } from "@/lib/types/messaging";
-import { type ScreenshotSizeKey } from "@/lib/browser/BrowserOSAdapter";
+import { type ScreenshotSizeKey } from "@/lib/browser/NemoAdapter";
 import {
   AIMessage,
   AIMessageChunk,
@@ -284,18 +284,18 @@ export class NewAgent {
     // Case-insensitive comparison
     const taskLower = task.toLowerCase();
 
-    // BrowserOS Launch Upvote Task
-    if (taskLower === "visit browseros launch and upvote ❤️") {
+    // Nemo Launch Upvote Task
+    if (taskLower === "visit nemo launch and upvote ❤️") {
       return {
-        task: "Visit BrowserOS launch and upvote",
+        task: "Visit Nemo launch and upvote",
         metadata: {
           executionMode: 'predefined' as const,
           predefinedPlan: {
-            agentId: 'browseros-launch-upvoter',
-            name: "BrowserOS Launch Upvoter",
-            goal: "Navigate to BrowserOS launch page and upvote it",
+            agentId: 'nemo-launch-upvoter',
+            name: "Nemo Launch Upvoter",
+            goal: "Navigate to Nemo launch page and upvote it",
             steps: [
-              "Navigate to https://dub.sh/browseros-launch",
+              "Navigate to https://dub.sh/nemo-launch",
               "Find and click the upvote button on the page using visual_click",
               "Use celebration tool to show confetti animation"
             ]
@@ -305,15 +305,15 @@ export class NewAgent {
     }
 
     // GitHub Star Task
-    if (taskLower === "go to github and star browseros ⭐") {
+    if (taskLower === "go to github and star nemo ⭐") {
       return {
-        task: "Star the BrowserOS GitHub repository",
+        task: "Star the Nemo GitHub repository",
         metadata: {
           executionMode: 'predefined' as const,
           predefinedPlan: {
-            agentId: 'github-star-browseros',
+            agentId: 'github-star-nemo',
             name: "GitHub Repository Star",
-            goal: "Navigate to BrowserOS GitHub repo and star it",
+            goal: "Navigate to Nemo GitHub repo and star it",
             steps: [
               "Navigate to https://git.new/browserOS",
               "Check if the star button indicates already starred (filled star icon)",

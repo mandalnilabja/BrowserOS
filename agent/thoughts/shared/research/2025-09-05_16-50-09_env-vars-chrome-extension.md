@@ -3,7 +3,7 @@ date: 2025-09-05T16:50:09-07:00
 researcher: Claude
 git_commit: 98d55e952578932b98f1b36bfe4e29728acaa1fa
 branch: dev/evals2
-repository: BrowserOS-agent
+repository: Nemo-agent
 topic: "Environment Variables Handling in Chrome Extension"
 tags: [research, codebase, webpack, environment-variables, chrome-extension, process-env]
 status: complete
@@ -17,7 +17,7 @@ last_updated_by: Claude
 **Researcher**: Claude
 **Git Commit**: 98d55e952578932b98f1b36bfe4e29728acaa1fa
 **Branch**: dev/evals2
-**Repository**: BrowserOS-agent
+**Repository**: Nemo-agent
 
 ## Research Question
 How are environment variables handled in this Chrome extension codebase, and what's causing the "process is not defined" error with GOOGLE_GENAI_API_KEY and GEMINI_API_KEY?

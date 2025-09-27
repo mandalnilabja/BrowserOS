@@ -90,7 +90,7 @@ export function HelpSection ({
                <Monitor className="w-4 h-4" />
              </div>
              <div className="flex items-center gap-2">
-               <h2 className="text-lg font-semibold text-foreground">BrowserOS Agent</h2>
+               <h2 className="text-lg font-semibold text-foreground">Nemo Agent</h2>
                {version && <span className="text-xs text-muted-foreground/70">v{version}</span>}
              </div>
            </div>
@@ -202,7 +202,7 @@ export function HelpSection ({
            {/* Learn More */}
            <div className="pt-4 border-t border-border/30">
              <a
-               href="https://bit.ly/BrowserOS-setup"
+               href="https://bit.ly/Nemo-setup" //add own url for crx
                target="_blank"
                rel="noopener noreferrer"
                className="inline-flex items-center gap-2.5 text-brand hover:text-brand/80 transition-all duration-200 group"

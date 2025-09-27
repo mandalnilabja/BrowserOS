@@ -4,7 +4,7 @@ import { ExecutionContext } from '@/lib/runtime/ExecutionContext'
 import { Logging } from '@/lib/utils/Logging'
 import { toolSuccess, toolError } from '@/lib/tools/tool.interface'
 import { PubSub } from '@/lib/pubsub'
-import { SCREENSHOT_SIZES, type ScreenshotSizeKey } from '@/lib/browser/BrowserOSAdapter'
+import { SCREENSHOT_SIZES, type ScreenshotSizeKey } from '@/lib/browser/NemoAdapter'
 
 // Input schema for the screenshot tool
 const ScreenshotToolInputSchema = z.object({

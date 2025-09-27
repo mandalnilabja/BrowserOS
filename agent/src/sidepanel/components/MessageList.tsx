@@ -30,11 +30,11 @@ interface MessageListProps {
   containerRef?: React.RefObject<HTMLDivElement>
 }
 
-// Example prompts - showcasing BrowserOS capabilities
+// Example prompts - showcasing Nemo capabilities
 const EXAMPLES = [
-  "Visit BrowserOS launch and upvote ❤️",
+  "Visit Nemo launch and upvote ❤️",
   // "Find top-rated headphones under $200",
-  "Go to GitHub and Star BrowserOS ⭐",
+  "Go to GitHub and Star Nemo ⭐",
   // "Turn this article into a LinkedIn post",
   "Open amazon.com and order Sensodyne toothpaste 🪥",
 ]
@@ -244,7 +244,7 @@ export function MessageList({ messages, isProcessing = false, onScrollStateChang
                 web assistant{' '}
                 <img 
                   src="/assets/nemo.svg" 
-                  alt="BrowserOS" 
+                  alt="Nemo" 
                   className="w-8 h-8 inline-block align-text-bottom animate-fade-in-up"
                 />
               </span>

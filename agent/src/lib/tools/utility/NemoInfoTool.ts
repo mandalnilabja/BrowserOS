@@ -3,8 +3,8 @@ import { DynamicStructuredTool } from '@langchain/core/tools'
 import { ExecutionContext } from '@/lib/runtime/ExecutionContext'
 import { toolSuccess, toolError, type ToolOutput } from '@/lib/tools/tool.interface'
 
-// Input schema for BrowserOS info tool
-const BrowserOSInfoToolInputSchema = z.object({
+// Input schema for Nemo info tool
+const NemoInfoToolInputSchema = z.object({
   topic: z.enum([
     'overview',
     'installation',
@@ -14,27 +14,27 @@ const BrowserOSInfoToolInputSchema = z.object({
     'troubleshooting',
     'examples',
     'features'
-  ]).describe('Information topic to retrieve about BrowserOS'),
+  ]).describe('Information topic to retrieve about Nemo'),
 
   section: z.string()
     .optional()
     .describe('Specific section within the topic (optional)')
 })
 
-export type BrowserOSInfoToolInput = z.infer<typeof BrowserOSInfoToolInputSchema>
+export type NemoInfoToolInput = z.infer<typeof NemoInfoToolInputSchema>
 
 /**
- * BrowserOSInfoTool - Provides comprehensive information about BrowserOS features and usage
- * Contains various README-style documentation for different aspects of BrowserOS
+ * NemoInfoTool - Provides comprehensive information about Nemo features and usage
+ * Contains various README-style documentation for different aspects of Nemo
  */
-export class BrowserOSInfoTool {
+export class NemoInfoTool {
   private executionContext: ExecutionContext
 
   constructor(executionContext: ExecutionContext) {
     this.executionContext = executionContext
   }
 
-  async execute(input: BrowserOSInfoToolInput): Promise<ToolOutput> {
+  async execute(input: NemoInfoToolInput): Promise<ToolOutput> {
     try {
       const { topic, section } = input
 
@@ -50,15 +50,15 @@ export class BrowserOSInfoTool {
         content: info
       }))
     } catch (error) {
-      return toolError(`Failed to retrieve BrowserOS info: ${error instanceof Error ? error.message : String(error)}`)
+      return toolError(`Failed to retrieve Nemo info: ${error instanceof Error ? error.message : String(error)}`)
     }
   }
 
   private _getTopicInfo(topic: string, section?: string): string | null {
     const infoDatabase = {
-      overview: `# BrowserOS Overview
+      overview: `# Nemo Overview
 
-BrowserOS is an AI-powered browser automation platform that enables intelligent web interaction through natural language commands.
+Nemo is an AI-powered browser automation platform that enables intelligent web interaction through natural language commands.
 
 ## Key Features
 - **AI-Driven Automation**: Uses LLM providers (Claude, OpenAI, Ollama) to understand and execute browser tasks
@@ -80,7 +80,7 @@ BrowserOS is an AI-powered browser automation platform that enables intelligent 
 - Browser-based task automation
 - AI-assisted web navigation`,
 
-      installation: `# BrowserOS Installation Guide
+      installation: `# Nemoallation Guide
 
 ## Prerequisites
 - Chrome browser (latest version recommended)
@@ -92,8 +92,8 @@ BrowserOS is an AI-powered browser automation platform that enables intelligent 
 ### 1. Chrome Extension Installation
 \`\`\`bash
 # Clone the repository
-git clone https://github.com/browseros-ai/BrowserOS-agent
-cd BrowserOS-agent
+git clone https://github.com/nemo-ai/Nemo-agent
+cd Nemo-agent
 
 # Install dependencies
 npm install
@@ -106,10 +106,10 @@ npm run build
 1. Open Chrome and navigate to \`chrome://extensions/\`
 2. Enable "Developer mode" in the top right
 3. Click "Load unpacked" and select the \`dist\` folder
-4. The BrowserOS extension should now appear in your extensions
+4. The Nemo extension should now appear in your extensions
 
 ### 3. Configuration
-1. Click the BrowserOS extension icon
+1. Click the Nemo extension icon
 2. Configure your LLM provider (Claude, OpenAI, or Ollama)
 3. Set up API keys in the settings panel
 4. Test the connection with a simple task
@@ -126,7 +126,7 @@ npm test
 npm run lint
 \`\`\``,
 
-      configuration: `# BrowserOS Configuration
+      configuration: `# Nemo Configuration
 
 ## LLM Provider Setup
 
@@ -170,7 +170,7 @@ LITELLM_API_KEY=your-api-key
 MOONDREAM_API_KEY=your-vision-api-key
 \`\`\``,
 
-      automation: `# BrowserOS Automation Capabilities
+      automation: `# Nemo Automation Capabilities
 
 ## Core Automation Features
 
@@ -212,7 +212,7 @@ MOONDREAM_API_KEY=your-vision-api-key
 - Loop detection and prevention
 - User cancellation support`,
 
-      api: `# BrowserOS API Reference
+      api: `# Nemo API Reference
 
 ## Tool System
 
@@ -253,7 +253,7 @@ const state = await browserOS.getBrowserState()
 const screenshot = await browserOS.takeScreenshot()
 \`\`\``,
 
-      troubleshooting: `# BrowserOS Troubleshooting
+      troubleshooting: `# Nemo Troubleshooting
 
 ## Common Issues
 
@@ -293,7 +293,7 @@ localStorage.setItem('browserOS.debug', 'true')
 - Enable verbose logging in settings
 - Report issues with detailed reproduction steps`,
 
-      examples: `# BrowserOS Usage Examples
+      examples: `# Nemo Usage Examples
 
 ## Basic Navigation
 \`\`\`
@@ -305,7 +305,7 @@ Navigate to https://example.com and click the login button
 Fill out the contact form with:
 - Name: John Doe
 - Email: john@example.com
-- Message: Hello from BrowserOS
+- Message: Hello from Nemo
 Then submit the form
 \`\`\`
 
@@ -344,7 +344,7 @@ If you encounter a CAPTCHA or need human verification,
 pause and wait for me to complete it manually
 \`\`\``,
 
-      features: `# BrowserOS Features
+      features: `# Nemo Features
 
 ## AI-Powered Automation
 - **Natural Language Processing**: Understands complex instructions in plain English
@@ -405,14 +405,14 @@ pause and wait for me to complete it manually
 }
 
 /**
- * Factory function to create BrowserOSInfoTool for LangChain integration
+ * Factory function to create NemoInfoTool for LangChain integration
  */
-export function createBrowserOSInfoTool(executionContext: ExecutionContext): DynamicStructuredTool {
-  const browserOSInfoTool = new BrowserOSInfoTool(executionContext)
+export function createNemoInfoTool(executionContext: ExecutionContext): DynamicStructuredTool {
+  const browserOSInfoTool = new NemoInfoTool(executionContext)
 
   return new DynamicStructuredTool({
-    name: "browseros_info_tool",
-    description: `Get comprehensive information about BrowserOS features, configuration, and usage.
+    name: "nemo_info_tool",
+    description: `Get comprehensive information about Nemoures, configuration, and usage.
 
     Available topics:
     - overview: General overview and key features
@@ -426,7 +426,7 @@ export function createBrowserOSInfoTool(executionContext: ExecutionContext): Dyn
 
     Optionally specify a section within a topic for more focused information.`,
 
-    schema: BrowserOSInfoToolInputSchema,
+    schema: NemoInfoToolInputSchema,
 
     func: async (args): Promise<string> => {
       const result = await browserOSInfoTool.execute(args)

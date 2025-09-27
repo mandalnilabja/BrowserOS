@@ -311,7 +311,7 @@ declare namespace chrome.browserOS {
     callback: (snapshot: Snapshot) => void,
   ): void;
 
-  // Get BrowserOS version number
+  // Get Nemo version number
   function getVersionNumber(callback: (version: string) => void): void;
 
   // Logs a metric event with optional properties

@@ -8,7 +8,7 @@ import { feedbackService } from '@/lib/services/feedbackService'
 // Message schema for chat store with Zod validation
 export const MessageSchema = z.object({
   msgId: z.string(),  // Primary ID for both React keys and PubSub correlation
-  role: z.enum(['user', 'thinking', 'assistant', 'error', 'narration', 'plan_editor']), 
+  role: z.enum(['user', 'thinking', 'assistant', 'error', 'narration']), 
   content: z.string(),  // Message content
   timestamp: z.date(),  // When message was created
   metadata: z.object({
@@ -37,7 +37,7 @@ type ChatState = z.infer<typeof ChatStateSchema>
 export interface PubSubMessage {
   msgId: string
   content: string
-  role: 'thinking' | 'user' | 'assistant' | 'error' | 'narration' | 'plan_editor'
+  role: 'thinking' | 'user' | 'assistant' | 'error' | 'narration'
   ts: number
 }
 
@@ -61,8 +61,7 @@ interface ChatActions {
   setFeedbackUIState: (messageId: string, state: Partial<{ isSubmitting: boolean; showModal: boolean; error: string | null }>) => void
   getFeedbackUIState: (messageId: string) => { isSubmitting: boolean; showModal: boolean; error: string | null }
   
-  // Plan editing
-  publishPlanEditResponse: (response: { planId: string; action: 'execute' | 'cancel'; steps?: any[] }) => void
+
   executedPlans: Record<string, boolean>
   setPlanExecuted: (planId: string) => void
   
@@ -140,14 +139,7 @@ export const useChatStore = create<ChatState & ChatActions>((set) => ({
   
   setError: (error) => set({ error }),
   
-  // Send plan edit response to background script
-  publishPlanEditResponse: (response) => {
-    const messaging = PortMessaging.getInstance()
-    const success = messaging.sendMessage(MessageType.PLAN_EDIT_RESPONSE, response)
-    if (!success) {
-      console.error('Failed to send plan edit response - port not connected')
-    }
-  },
+
 
   setPlanExecuted: (planId) => {
     set((state) => ({

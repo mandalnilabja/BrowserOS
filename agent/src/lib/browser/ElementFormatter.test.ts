@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { ElementFormatter } from "./ElementFormatter";
-import type { InteractiveNode } from "./BrowserOSAdapter";
+import type { InteractiveNode } from "./NemoAdapter";
 
 describe("ElementFormatter", () => {
   // Sample test data

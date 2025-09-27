@@ -1,4 +1,4 @@
-import type { InteractiveNode } from "./BrowserOSAdapter";
+import type { InteractiveNode } from "./NemoAdapter";
 
 // ============= Element Formatter =============
 
