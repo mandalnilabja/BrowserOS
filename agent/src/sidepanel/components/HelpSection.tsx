@@ -12,41 +12,6 @@ const HelpSectionPropsSchema = z.object({
 
 type HelpSectionProps = z.infer<typeof HelpSectionPropsSchema>
 
-// Agent examples
-const AGENT_EXAMPLES = {
-  browse: {
-    title: 'Web Navigation & Automation',
-    description:
-      'I can navigate websites, fill forms, click buttons, and automate complex web tasks',
-    examples: [
-      'Open amazon.com and search for wireless headphones under $100',
-      'Accept all LinkedIn connection requests on this page',
-      'Add this item to my shopping cart and complete the purchase'
-    ]
-  },
-  answer: {
-    title: 'Data Extraction & Analysis',
-    description:
-      "I can read, analyze, and extract information from any webpage you're viewing",
-    examples: [
-      'Summarize this research paper in bullet points',
-      'Extract all email addresses from this page',
-      'What are the key features mentioned in this product description?'
-    ]
-  },
-  productivity: {
-    title: 'Tab & Browser Management',
-    description:
-      'I can organize your tabs, manage bookmarks, and help you work more efficiently',
-    examples: [
-      'List all tabs in this window',
-      'Close all YouTube tabs',
-      'Organize my tabs by topic',
-      "Save current tabs as 'Work' session",
-      "Resume my 'Work' session from yesterday"
-    ]
-  }
-}
 
 /**
  * Help section component displaying comprehensive usage instructions
@@ -156,50 +121,6 @@ export function HelpSection ({
              </div>
            </div>
 
-            {/* Agent Capabilities */}
-           <div className="space-y-3">
-             <h3 className="text-base font-semibold text-foreground">What I Can Do</h3>
-
-              {Object.entries(AGENT_EXAMPLES).map(([key, agent]) => (
-               <div key={key} className="space-y-1">
-                 <div className="flex items-center gap-1">
-                   <div className="w-1.5 h-1.5 bg-brand rounded-full"></div>
-                   <h4 className="text-sm font-semibold text-foreground">{agent.title}</h4>
-                 </div>
-                 <p className="text-xs text-muted-foreground/80 ml-3.5">{agent.description}</p>
-                                   <div className="grid grid-cols-1 gap-1 ml-3.5 mt-1">
-                    {agent.examples.map((example, index) => (
-                      <div 
-                        key={index} 
-                        className="p-3 bg-brand/10 border border-brand/20 rounded-xl cursor-pointer hover:bg-brand/20 hover:border-brand/30 transition-all duration-200"
-                        onClick={() => {
-                          // Dispatch custom event to set input value
-                          window.dispatchEvent(new CustomEvent('setInputValue', {
-                            detail: example
-                          }))
-                          // Close the help section
-                          onClose()
-                        }}
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault()
-                            window.dispatchEvent(new CustomEvent('setInputValue', {
-                              detail: example
-                            }))
-                            onClose()
-                          }
-                        }}
-                        aria-label={`Use prompt: ${example}`}
-                      >
-                        <span className="text-xs text-foreground">"{example}"</span>
-                      </div>
-                    ))}
-                  </div>
-               </div>
-             ))}
-           </div>
 
            {/* Learn More */}
            <div className="pt-4 border-t border-border/30">

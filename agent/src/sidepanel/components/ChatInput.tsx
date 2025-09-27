@@ -98,18 +98,6 @@ export function ChatInput({ isConnected, isProcessing }: ChatInputProps) {
     return () => clearTimeout(timer)
   }, [isProcessing])
   
-  // Listen for example prompt clicks
-  useEffect(() => {
-    const handleSetInput = (e: CustomEvent) => {
-      setInput(e.detail)
-      textareaRef.current?.focus()
-    }
-    
-    window.addEventListener('setInputValue', handleSetInput as EventListener)
-    return () => {
-      window.removeEventListener('setInputValue', handleSetInput as EventListener)
-    }
-  }, [])
   
 
   
@@ -269,7 +257,7 @@ export function ChatInput({ isConnected, isProcessing }: ChatInputProps) {
   
   const getPlaceholder = () => {
     if (isProcessing) return 'Task running…'
-    return chatMode ? 'Ask about this page...' : 'Ask me anything... (/ to pick an agent)'
+    return chatMode ? 'Ask about this page...' : 'Tell me to do anything'
   }
   
   const getHintText = () => {

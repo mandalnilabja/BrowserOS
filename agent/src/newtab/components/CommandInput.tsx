@@ -64,7 +64,7 @@ export function CommandInput({ onCreateAgent }: CommandInputProps = {}) {
   
   // Simple placeholder
   const getPlaceholder = () => {
-    return 'Ask anything interesting ...'
+    return 'Ask me anything ...'
   }
   
   return (

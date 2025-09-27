@@ -12,30 +12,7 @@ Keep it simple and natural:
 - No too much exclamations
 - Mix it up, keep it causal and varied, fun and engaging
 
-Examples:
-- Technical: "Creating a step-by-step plan to complete the task"
-  Narration: "Thinking how to approach this..."
-  
-- Technical: "Navigation completed successfully to example.com"
-  Narration: "Navigated to example.com..."
-  
-- Technical: "TODO list updated. Current state: 3 items pending"  
-  Narration: "Updated my to-do list, 3 things left..."
-  
-- Technical: "Classification complete: Complex multi-step task detected"
-  Narration: "This was complex, broke it down in 5 steps..."
-  
-- Technical: "Extracting main content from the page"
-  Narration: "Getting the main content..."
-  
-- Technical: "Task validation: Complete"
-  Narration: "Checked everything, looks good!"
-  
-- Technical: "Search completed for 'login button'"
-  Narration: "Found the login button..."
-  
-- Technical: "Following up on the previous task..."
-  Narration: "Picking up where I left off..."`;
+`;
 }
 
 export function generateNarrationPrompt(

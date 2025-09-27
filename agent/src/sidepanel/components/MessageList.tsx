@@ -1,23 +1,14 @@
-import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { MessageItem } from './MessageItem'
 import { CollapsibleThoughts } from './CollapsibleThoughts'
-import { TypingIndicator } from './TypingIndicator'
 import { GroupedThinkingSection } from './GroupedThinkingSection'
-import { GroupedPlanningSection } from './GroupedPlanningSection'
-import { GroupedExecutionSection } from './GroupedExecutionSection'
-import { ParentCollapsibleWrapper } from './ParentCollapsibleWrapper'
-import { AgentActivitySkeleton } from './skeleton/AgentActivitySkeleton'
 import { ThinkingSkeleton } from './skeleton/ThinkingSkeleton'
-import { PlanningSkeleton } from './skeleton/PlanningSkeleton'
-import { ExecutionSkeleton } from './skeleton/ExecutionSkeleton'
-import { Button } from '@/sidepanel/components/ui/button'
 import { useAutoScroll } from '../hooks/useAutoScroll'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { cn } from '@/sidepanel/lib/utils'
 import { groupMessages } from '../utils/messageGrouping'
 import type { Message } from '../stores/chatStore'
 import { useSidePanelPortMessaging } from '@/sidepanel/hooks'
-import { MessageType } from '@/lib/types/messaging'
 import { useChatStore } from '@/sidepanel/stores/chatStore'
 import { useSettingsStore } from '@/sidepanel/stores/settingsStore'
 import { useTabsStore } from '@/sidepanel/stores/tabsStore'
@@ -30,17 +21,7 @@ interface MessageListProps {
   containerRef?: React.RefObject<HTMLDivElement>
 }
 
-// Example prompts - showcasing Nemo capabilities
-const EXAMPLES = [
-  "Visit Nemo launch and upvote ❤️",
-  // "Find top-rated headphones under $200",
-  "Go to GitHub and Star Nemo ⭐",
-  // "Turn this article into a LinkedIn post",
-  "Open amazon.com and order Sensodyne toothpaste 🪥",
-]
 
-// Animation constants  
-const DEFAULT_DISPLAY_COUNT = 4 // Fixed number of examples to show
 
 /**
  * MessageList component
@@ -54,9 +35,6 @@ export function MessageList({ messages, isProcessing = false, onScrollStateChang
   const { chatMode, setChatMode } = useSettingsStore()
   const { getContextTabs, clearSelectedTabs } = useTabsStore()
   const [, setIsAtBottom] = useState(true)
-  const [currentExamples] = useState<string[]>(EXAMPLES)
-  const [isAnimating] = useState(false)
-  const [displayCount] = useState(DEFAULT_DISPLAY_COUNT)
   
   // Track previously seen message IDs to determine which are new
   const previousMessageIdsRef = useRef<Set<string>>(new Set())
@@ -198,32 +176,6 @@ export function MessageList({ messages, isProcessing = false, onScrollStateChang
     }
   }
 
-  const handleExampleClick = (prompt: string) => {
-    // Prevent any event propagation that might interfere
-    trackFeature('example_prompt', { prompt })
-
-    // Switch to Agent Mode for example runs
-    try { setChatMode(false) } catch { /* no-op */ }
-
-    // Mirror ChatInput.submitTask behavior
-    const msgId = `user_${Date.now()}`
-    upsertMessage({ msgId, role: 'user', content: prompt, ts: Date.now() })
-    setProcessing(true)
-
-    // Collect selected context tabs (same behavior as ChatInput)
-    const contextTabs = getContextTabs()
-    const tabIds = contextTabs.length > 0 ? contextTabs.map(tab => tab.id) : undefined
-
-    sendMessage(MessageType.EXECUTE_QUERY, {
-      query: prompt.trim(),
-      tabIds,
-      source: 'sidepanel',
-      chatMode: false
-    })
-
-    // Clear selected tabs after sending (mirror ChatInput)
-    try { clearSelectedTabs() } catch { /* no-op */ }
-  }
   
   // Landing View
   if (messages.length === 0) {
@@ -231,13 +183,13 @@ export function MessageList({ messages, isProcessing = false, onScrollStateChang
       <div 
         className="h-full overflow-y-auto flex flex-col items-center justify-center p-8 text-center relative"
         role="region"
-        aria-label="Welcome screen with example prompts"
+        aria-label="Welcome screen"
       >
-        {/* Main content - vertically centered (Examples remain centered) */}
+        {/* Main content - vertically centered */}
         <div className="relative z-0 flex flex-col items-center justify-center min-h-0 max-w-lg w-full">
           
           {/* Tagline */}
-          <div className="flex items-center justify-center -mt-4">
+          <div className="flex items-center justify-center">
             <h2 className="text-3xl font-bold text-muted-foreground animate-fade-in-up flex items-baseline flex-wrap justify-center gap-2 text-center px-2">
               <span>Your <span className="text-brand">Agentic</span></span>
               <span>
@@ -251,51 +203,11 @@ export function MessageList({ messages, isProcessing = false, onScrollStateChang
             </h2>
           </div>
 
-          {/* Example Prompts */}
-          <div className="mb-8 mt-2">
-            <h3 className="text-lg font-semibold text-foreground mb-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-              What would you like to do?
-            </h3>
-            <div 
-              className={`flex flex-col items-center max-w-lg w-full space-y-3 transition-transform duration-500 ease-in-out ${
-                isAnimating ? 'translate-y-5' : ''
-              }`}
-              role="group"
-              aria-label="Example prompts"
-            >
-              {currentExamples.map((prompt, index) => (
-                <div 
-                  key={`${prompt}-${index}`} 
-                  className={`relative w-full transition-all duration-500 ease-in-out ${
-                    isAnimating && index === 0 ? 'animate-fly-in-top' : 
-                    isAnimating && index === currentExamples.length - 1 ? 'animate-fly-out-bottom' : ''
-                  }`}
-                >
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="group relative text-sm h-auto py-3 px-4 whitespace-normal bg-background/50 backdrop-blur-sm border-2 border-brand/30 hover:border-brand hover:bg-brand/5 smooth-hover smooth-transform hover:scale-105 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none overflow-hidden w-full message-enter"
-                    onClick={(e: React.MouseEvent) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      handleExampleClick(prompt)
-                    }}
-                    aria-label={`Use example: ${prompt}`}
-                  >
-                    {/* Animated background */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-brand/0 via-brand/5 to-brand/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                    
-                    {/* Content */}
-                    <span className="relative z-10 font-medium text-foreground group-hover:text-brand transition-colors duration-300">
-                      {prompt}
-                    </span>
-                    
-                    {/* Glow effect */}
-                    <div className="absolute inset-0 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-brand/20 to-transparent"></div>
-                  </Button>
-                </div>
-              ))}
-            </div>
+          {/* Welcome message */}
+          <div className="mt-6">
+            <p className="text-lg text-muted-foreground animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              Ready to help you navigate and automate the web
+            </p>
           </div>
         </div>
       </div>

@@ -17,16 +17,6 @@ export function generateSystemPrompt(toolDescriptions: string): string {
 4. **NEVER** skip waiting for content to load
 5. **NEVER** make assumptions without checking
 
-## 📌 SPECIAL EXAMPLE TASKS
-NOTE: When user says something like "Visit Nemo launch and upvote ❤️", execute these steps:
-1. Navigate to https://dub.sh/nemo-launch
-2. Click the upvote button
-3. Use celebration_tool to show confetti
-
-NOTE: When user says something like "Go to Github and Star Nemo ⭐", execute these steps:
-1. Navigate to https://git.new/browserOS
-2. Click the star button (only if it is looking gray -- i.e., not starred)
-3. Use celebration_tool to show confetti (only if star was clicked)
 
 
 ## 🔄 EXECUTION WORKFLOW
@@ -37,20 +27,10 @@ The system automatically classifies tasks before you see them:
 - NO PLANNING - The planner tool was skipped for these tasks
 - Complete the task using appropriate tools, then call done_tool
 - May require one or multiple tool calls depending on the task
-- Examples:
-  - "Execute task directly: list tabs" 
-    → Use tab_operations_tool to list, then done_tool
-  - "Execute task directly: go to google.com" 
-    → Use navigation_tool to navigate, then done_tool
-  - "Execute task directly: close all YouTube tabs"
-    → May need: list tabs → identify YouTube tabs → close them → done_tool
-  - "Execute task directly: create new tab" 
-    → Use tab_operations_tool to create, then done_tool
 
 **Complex Tasks (appear as regular plan steps)**
 - Multi-step execution required
 - You'll receive specific action steps from the planner
-- Examples: "Navigate to amazon.com", "Search for product", etc.
 
 **If task succeeded:**
 → Use done_tool with success message
@@ -92,14 +72,6 @@ When users ask about emails, videos, documents, calendars, repositories, or othe
 - ❌ NEVER use partial IDs - use the exact instanceId from getUserInstances
 - ❌ NEVER combine steps - execute them sequentially
 
-### Example: "Check my unread emails"
-1. mcp_tool { action: 'getUserInstances' }
-   → Returns: { instances: [{ id: 'a146178c-e0c8-416c-96cd-6fbe809e0cf8', name: 'Gmail', authenticated: true }] }
-2. mcp_tool { action: 'listTools', instanceId: 'a146178c-e0c8-416c-96cd-6fbe809e0cf8' }
-   → Returns: { tools: [{ name: 'gmail_search_emails', description: 'Searches for emails using Gmail search syntax' }, { name: 'gmail_read_email', description: 'Retrieves the content of a specific email' }] }
-3. mcp_tool { action: 'callTool', instanceId: 'a146178c-e0c8-416c-96cd-6fbe809e0cf8', toolName: 'gmail_search_emails', toolArgs: { "q": "is:unread" } }
-   → Note: toolArgs is a JSON object with property "q", NOT a string like "{'q': 'is:unread'}"
-   → Returns: unread email messages
 
 ### MCP Usage Rules
 - **ALWAYS execute all 3 steps in order** - No exceptions

@@ -12,7 +12,6 @@ import { z } from 'zod'
 import { NemoProvidersConfig, NemoProvidersConfigSchema } from '@/lib/llm/settings/types'
 import { MCP_SERVERS, type MCPServerConfig } from '@/config/mcpServers'
 
-const GITHUB_REPO_URL: string = 'https://github.com/nemo-ai/Nemo'
 
 interface HeaderProps {
   onReset: () => void
@@ -177,8 +176,8 @@ export const Header = memo(function Header({ onReset, showReset, isProcessing }:
         
 
 
+        {/* Left side - Control buttons */}
         <nav className="flex items-center gap-2 sm:gap-3" role="navigation" aria-label="Chat controls">
-
           {/* Show Pause button if processing */}
           {isProcessing && (
             <Button
@@ -206,49 +205,49 @@ export const Header = memo(function Header({ onReset, showReset, isProcessing }:
               <RotateCcw className="w-4 h-4" />
             </Button>
           )}
-
-          {/* Help button */}
-          <Button
-            onClick={handleHelpClick}
-            variant="ghost"
-            size="sm"
-            className="h-9 w-9 p-0 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300"
-            aria-label="Open help"
-            title="Help"
-          >
-            <HelpCircle className="w-4 h-4" />
-          </Button>
-
-          {/* Settings button - Last position (rightmost) */}
-          <Button
-            onClick={handleSettingsClick}
-            variant="ghost"
-            size="sm"
-            className="h-9 w-9 p-0 rounded-xl hover:bg-brand/10 hover:text-brand transition-all duration-300"
-            aria-label="Open settings"
-          >
-            <Settings className="w-4 h-4" />
-          </Button>
         </nav>
 
-        {/* Settings Modal - positioned relative to header */}
-        <div className="relative settings-dropdown">
-          <SettingsModal 
-            isOpen={showSettings}
-            onClose={() => setShowSettings(false)}
-            onOpenHelp={() => {
-              setShowSettings(false)
-              setShowHelp(true)
-            }}
-          />
-        </div>
+        {/* Right side - Help and Settings buttons */}
+        <div className="flex items-center gap-2">
+          {/* Help button */}
+          <div className="relative help-dropdown">
+            <Button
+              onClick={handleHelpClick}
+              variant="ghost"
+              size="sm"
+              className="h-9 w-9 p-0 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300"
+              aria-label="Open help"
+              title="Help"
+            >
+              <HelpCircle className="w-4 h-4" />
+            </Button>
+            <HelpSection 
+              isOpen={showHelp}
+              onClose={() => setShowHelp(false)}
+            />
+          </div>
 
-        {/* Help Section - positioned relative to header */}
-        <div className="relative help-dropdown">
-          <HelpSection 
-            isOpen={showHelp}
-            onClose={() => setShowHelp(false)}
-          />
+          {/* Settings button */}
+          <div className="relative settings-dropdown">
+            <Button
+              onClick={handleSettingsClick}
+              variant="ghost"
+              size="sm"
+              className="h-9 w-9 p-0 rounded-xl hover:bg-brand/10 hover:text-brand transition-all duration-300"
+              aria-label="Open settings"
+              title="Settings"
+            >
+              <Settings className="w-4 h-4" />
+            </Button>
+            <SettingsModal 
+              isOpen={showSettings}
+              onClose={() => setShowSettings(false)}
+              onOpenHelp={() => {
+                setShowSettings(false)
+                setShowHelp(true)
+              }}
+            />
+          </div>
         </div>
       </header>
     </>

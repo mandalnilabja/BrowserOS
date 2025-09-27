@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { Header } from './Header'
 import { MessageList } from './MessageList'
 import { ChatInput } from './ChatInput'
@@ -8,7 +8,6 @@ import { ErrorBoundary } from './ErrorBoundary'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { ArrowDown } from 'lucide-react'
 import { useSidePanelPortMessaging } from '@/sidepanel/hooks'
-import { MessageType } from '@/lib/types/messaging'
 
 interface ChatProps {
   isConnected: boolean
