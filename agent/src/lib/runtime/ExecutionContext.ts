@@ -62,7 +62,6 @@ export class ExecutionContext {
   debugMode: boolean  // Whether debug logging is enabled
   selectedTabIds: number[] | null = null  // Selected tab IDs
   todoStore: TodoStore  // TODO store for complex task management
-  parentSpanId: string | null = null  // Parent span ID for evals2 tracing
   private userInitiatedCancel: boolean = false  // Track if cancellation was user-initiated
   private _isExecuting: boolean = false  // Track actual execution state
   private _lockedTabId: number | null = null  // Tab that execution is locked to
@@ -87,15 +86,6 @@ export class ExecutionContext {
     toolFrequency: new Map<string, number>(),
   };
   
-  // Tool metrics Map for evals2 lightweight tracking
-  toolMetrics: Map<string, {
-    toolName: string
-    duration: number
-    success: boolean
-    timestamp: number
-    error?: string
-  }> | undefined
-
   constructor(options: ExecutionContextOptions) {
     // Validate options at runtime with proper type checking
     const validatedOptions = ExecutionContextOptionsSchema.parse(options)
@@ -247,9 +237,6 @@ export class ExecutionContext {
     this._todoList = "";
     this._reasoningHistory = []; // Clear reasoning history
     this.todoStore.reset();
-    // Clear tool metrics for evals2
-    this.toolMetrics?.clear();
-    this.toolMetrics = undefined;
     // Reset metrics
     this._executionMetrics = {
       toolCalls: 0,

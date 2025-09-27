@@ -10,11 +10,6 @@ import { PubSubChannel } from "@/lib/pubsub/PubSubChannel";
 import { PubSub } from "@/lib/pubsub";
 import { ExecutionMetadata } from "@/lib/types/messaging";
 import { getFeatureFlags } from "@/lib/utils/featureFlags";
-// Evals2: session, scoring, and logging
-import { ENABLE_EVALS2 } from "@/config";
-import { BraintrustEventManager } from "@/evals2/BraintrustEventManager";
-import { EvalsScorer } from "@/evals2/EvalScorer";
-import { braintrustLogger } from "@/evals2/BraintrustLogger";
 
 // Execution options schema (without executionId since it's now fixed)
 export const ExecutionOptionsSchema = z.object({
@@ -166,11 +161,10 @@ export class Execution {
 
       // Evals2: start a session and attach parent span to context
       let parentSpanId: string | undefined;
-      const evalsEventMgr = BraintrustEventManager.getInstance();
-      if (ENABLE_EVALS2 && evalsEventMgr.isEnabled()) {
+      if (this.pubsub) {
         try {
           const sessionId = `session_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-          const { parent } = await evalsEventMgr.startSession({
+          const { parent } = await this.pubsub.startSession({
             sessionId,
             task: query,
             timestamp: Date.now(),
@@ -204,66 +198,6 @@ Upgrade to the latest Nemo version from [GitHub Releases](https://github.com/nem
 
       // Execute
       await agent.execute(query, metadata || this.options.metadata);
-
-      // Evals2: post-execution scoring + upload
-      if (ENABLE_EVALS2 && evalsEventMgr.isEnabled()) {
-        try {
-          const scorer = new EvalsScorer();
-          const messages = executionContext.messageManager!.getMessages();
-          const durationMs = Date.now() - startTime;
-          let score;
-          try {
-            score = await scorer.scoreFromMessages(
-              messages,
-              query,
-              executionContext.toolMetrics,
-              durationMs
-            );
-          } catch (err) {
-            // Fallback to heuristic scoring if LLM scoring unavailable (e.g., no Gemini key)
-            (scorer as any).llm = null;
-            score = await scorer.scoreFromMessages(
-              messages,
-              query,
-              executionContext.toolMetrics,
-              durationMs
-            );
-          }
-
-          // Basic metadata for Braintrust
-          const provider = langChainProvider.getCurrentProvider();
-          const contextMetrics = {
-            messageCount: messages.length,
-            totalCharacters: messages.reduce((sum, m) => {
-              const c: any = (m as any).content;
-              if (typeof c === 'string') return sum + c.length;
-              if (Array.isArray(c)) return sum + JSON.stringify(c).length;
-              return sum;
-            }, 0),
-            estimatedTokens: 0
-          };
-
-          await braintrustLogger.logTaskScore(
-            query,
-            score,
-            durationMs,
-            {
-              agent: this.options.mode === 'chat' ? 'ChatAgent' : 'NewAgent',
-              provider: provider?.name,
-              model: provider?.modelId,
-            },
-            parentSpanId,
-            contextMetrics
-          );
-
-          // Track session-level average and end session
-          evalsEventMgr.addTaskScore(score.weightedTotal);
-          await evalsEventMgr.endSession('completed');
-        } catch (e) {
-          // Non-fatal
-          console.debug('Evals2 scoring/logging skipped:', e);
-        }
-      }
 
       Logging.log(
         "Execution",

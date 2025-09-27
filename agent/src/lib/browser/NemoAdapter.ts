@@ -1,4 +1,4 @@
-/// <reference path="../../types/chrome-browser-os.d.ts" />
+/// <reference path="../../types/chrome-nemo.d.ts" />
 
 // ============= Re-export types from chrome.browserOS namespace =============
 

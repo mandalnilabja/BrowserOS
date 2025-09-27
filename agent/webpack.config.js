@@ -32,16 +32,7 @@ const processEnv = {
   'process.env.FIREBASE_STORAGE_BUCKET': JSON.stringify(envKeys.FIREBASE_STORAGE_BUCKET || ''),
   'process.env.FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(envKeys.FIREBASE_MESSAGING_SENDER_ID || ''),
   'process.env.FIREBASE_APP_ID': JSON.stringify(envKeys.FIREBASE_APP_ID || ''),
-  'process.env.FIREBASE_MEASUREMENT_ID': JSON.stringify(envKeys.FIREBASE_MEASUREMENT_ID || ''),
-  // Braintrust Telemetry Configuration
-  'process.env.ENABLE_TELEMETRY': JSON.stringify(envKeys.ENABLE_TELEMETRY || 'false'),
-  'process.env.ENABLE_EVALS2': JSON.stringify(envKeys.ENABLE_EVALS2 || 'false'),
-  'process.env.BRAINTRUST_API_KEY': JSON.stringify(envKeys.BRAINTRUST_API_KEY || ''),
-  'process.env.BRAINTRUST_PROJECT_UUID': JSON.stringify(envKeys.BRAINTRUST_PROJECT_UUID || ''),
-  'process.env.BRAINTRUST_PROJECT_NAME': JSON.stringify(envKeys.BRAINTRUST_PROJECT_NAME || 'nemo-agent-online'),
-  // Gemini API keys for evals2 scoring
-  'process.env.GOOGLE_GENAI_API_KEY': JSON.stringify(envKeys.GOOGLE_GENAI_API_KEY || ''),
-  'process.env.GEMINI_API_KEY': JSON.stringify(envKeys.GEMINI_API_KEY || '')
+  'process.env.FIREBbase_MEASUREMENT_ID': JSON.stringify(envKeys.FIREBASE_MEASUREMENT_ID || ''),
 }
 
 console.log('API keys will be injected at build time (keys hidden for security)')
