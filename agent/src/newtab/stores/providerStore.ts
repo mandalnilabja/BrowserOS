@@ -668,23 +668,12 @@ export const useProviderStore = create<ProviderState & ProviderActions>()(
             return
           }
 
-          const finalSteps = isBuilder
-            ? ['Create new tab', ...agent.steps]
-            : agent.steps
-
           await chrome.runtime.sendMessage({
             type: 'NEWTAB_EXECUTE_QUERY',
             tabId: activeTab.id,
             query,
             metadata: {
-              source: 'newtab',
-              executionMode: 'predefined',
-              predefinedPlan: {
-                agentId: agent.id,
-                steps: finalSteps,
-                goal: agent.goal,
-                name: agent.name
-              }
+              source: 'newtab'
             }
           })
         } catch (error) {

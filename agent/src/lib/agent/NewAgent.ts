@@ -27,7 +27,6 @@ import { TokenCounter } from "@/lib/utils/TokenCounter";
 import {
   generateExecutorPrompt,
   generatePlannerPrompt,
-  generatePredefinedPlannerPrompt,
 } from "./NewAgent.prompt";
 import {
   createClickTool,
@@ -59,7 +58,6 @@ import { GlowAnimationService } from '@/lib/services/GlowAnimationService';
 // Constants
 const MAX_PLANNER_ITERATIONS = 50;
 const MAX_EXECUTOR_ITERATIONS = 3;
-const MAX_PREDEFINED_PLAN_ITERATIONS = 30;
 
 // Human input constants
 const HUMAN_INPUT_TIMEOUT = 600000;  // 10 minutes
@@ -94,40 +92,9 @@ const PlannerOutputSchema = z.object({
 
 type PlannerOutput = z.infer<typeof PlannerOutputSchema>;
 
-// Predefined planner output schema - uses TODO markdown for tracking
-const PredefinedPlannerOutputSchema = z.object({
-  todoMarkdown: z
-    .string()
-    .describe("Updated TODO list with completed items marked [x]"),
-  observation: z
-    .string()
-    .describe("What happened in last execution"),
-  reasoning: z
-    .string()
-    .describe("Why these actions will complete current TODO"),
-  actions: z
-    .array(z.string())
-    .max(5)
-    .describe("Actions to execute for current TODO"),
-  allTodosComplete: z
-    .boolean()
-    .describe("Are all TODOs complete?"),
-  finalAnswer: z
-    .string()
-    .describe("Summary when all TODOs complete (empty if not done)"),
-});
-
-type PredefinedPlannerOutput = z.infer<typeof PredefinedPlannerOutputSchema>;
-
 interface PlannerResult {
   ok: boolean;
   output?: PlannerOutput;
-  error?: string;
-}
-
-interface PredefinedPlannerResult {
-  ok: boolean;
-  output?: PredefinedPlannerOutput;
   error?: string;
 }
 
@@ -272,75 +239,10 @@ export class NewAgent {
     );
   }
 
-  /**
-   * Check if task is a special predefined task and return its metadata
-   * @param task - The original task string
-   * @returns Metadata with predefined plan or null if not a special task
-   */
-  private _getSpecialTaskMetadata(task: string): {task: string, metadata: ExecutionMetadata} | null {
-    // Case-insensitive comparison
-    const taskLower = task.toLowerCase();
 
-    // Nemo Launch Upvote Task
-    if (taskLower === "visit nemo launch and upvote ❤️") {
-      return {
-        task: "Visit Nemo launch and upvote",
-        metadata: {
-          executionMode: 'predefined' as const,
-          predefinedPlan: {
-            agentId: 'nemo-launch-upvoter',
-            name: "Nemo Launch Upvoter",
-            goal: "Navigate to Nemo launch page and upvote it",
-            steps: [
-              "Navigate to https://dub.sh/nemo-launch",
-              "Find and click the upvote button on the page using visual_click",
-              "Use celebration tool to show confetti animation"
-            ]
-          }
-        }
-      };
-    }
-
-    // GitHub Star Task
-    if (taskLower === "go to github and star nemo ⭐") {
-      return {
-        task: "Star the Nemo GitHub repository",
-        metadata: {
-          executionMode: 'predefined' as const,
-          predefinedPlan: {
-            agentId: 'github-star-nemo',
-            name: "GitHub Repository Star",
-            goal: "Navigate to Nemo GitHub repo and star it",
-            steps: [
-              "Navigate to https://git.new/browserOS",
-              "Check if the star button indicates already starred (filled star icon)",
-              "If not starred (outline star icon), click the star button to star the repository",
-              "Use celebration_tool to show confetti animation"
-            ]
-          }
-        }
-      };
-    }
-
-    // Return null if not a special task
-    return null;
-  }
-
-  // There are basically two modes of operation:
-  // 1. Dynamic planning - the agent plans and executes in a loop until done
-  // 2. Predefined plan - the agent executes a predefined set of steps in a loop until all are done
+  // There is only one mode of operation: Dynamic planning
+  // The agent plans and executes in a loop until done
   async execute(task: string, metadata?: ExecutionMetadata): Promise<void> {
-    // Check for special tasks and get their predefined plans
-    const specialTaskMetadata = this._getSpecialTaskMetadata(task);
-
-    let _task = task;
-    let _metadata = metadata;
-
-    if (specialTaskMetadata) {
-      _task = specialTaskMetadata.task;
-      _metadata = { ...metadata, ...specialTaskMetadata.metadata };
-      Logging.log("NewAgent", `Special task detected: ${specialTaskMetadata.metadata.predefinedPlan?.name}`, "info");
-    }
 
     try {
       this.executionContext.setExecutionMetrics({
@@ -351,12 +253,8 @@ export class NewAgent {
       Logging.log("NewAgent", `Starting execution`, "info");
       await this._initialize();
 
-      // Check for predefined plan (from special task or provided metadata)
-      if (_metadata?.executionMode === 'predefined' && _metadata.predefinedPlan) {
-        await this._executePredefined(_task, _metadata.predefinedPlan);
-      } else {
-        await this._executeDynamic(_task);
-      }
+      // Always use dynamic planning
+      await this._executeDynamic(task);
     } catch (error) {
       this._handleExecutionError(error);
       throw error;
@@ -379,137 +277,6 @@ export class NewAgent {
         console.error(`Could not stop glow animation: ${error}`);
       }
     }
-  }
-
-  private async _executePredefined(task: string, plan: any): Promise<void> {
-    this.executionContext.setCurrentTask(task);
-
-    // Convert predefined steps to TODO markdown
-    let todoMarkdown = plan.steps.map((step: string) => `- [ ] ${step}`).join('\n');
-    this.executionContext.setTodoList(todoMarkdown);
-
-    // executor system prompt
-    const systemPrompt = generateExecutorPrompt();
-    this.executorMessageManager.addSystem(systemPrompt);
-
-    // Validate LLM is initialized with tools bound
-    if (!this.executorLlmWithTools) {
-      throw new Error("LLM with tools not initialized");
-    }
-
-    // Publish start message
-    this._publishMessage(
-      `Executing agent: ${plan.name || 'Custom Agent'}`,
-      "thinking"
-    );
-
-    // Add goal for context
-    const goalMessage = plan.goal || task;
-    this.executorMessageManager.addHuman(`Goal: ${goalMessage}`);
-
-    let iterations = 0;
-    let allComplete = false;
-
-    while (!allComplete && iterations < MAX_PREDEFINED_PLAN_ITERATIONS) {
-      this.checkIfAborted();
-      iterations++;
-
-      Logging.log(
-        "NewAgent",
-        `Predefined plan iteration ${iterations}/${MAX_PREDEFINED_PLAN_ITERATIONS}`,
-        "info"
-      );
-
-      // Run predefined planner with current TODO state
-      const planResult = await this._runPredefinedPlanner(task, this.executionContext.getTodoList());
-
-      if (!planResult.ok) {
-        Logging.log(
-          "NewAgent",
-          `Predefined planning failed: ${planResult.error}`,
-          "error"
-        );
-        continue;
-      }
-
-      const plan = planResult.output!;
-
-      // Check if all complete
-      if (plan.allTodosComplete) {
-        allComplete = true;
-        const finalMessage = plan.finalAnswer || "All steps completed successfully";
-        this._publishMessage(finalMessage, 'assistant');
-        break;
-      }
-
-      // Validate we have actions
-      if (!plan.actions || plan.actions.length === 0) {
-        Logging.log(
-          "NewAgent",
-          "Predefined planner provided no actions but TODOs not complete",
-          "warning"
-        );
-        continue;
-      }
-
-      Logging.log(
-        "NewAgent",
-        `Executing ${plan.actions.length} actions for current TODO`,
-        "info"
-      );
-
-      // In limited context mode, start fresh for each planning iteration
-      if (this.executionContext.isLimitedContextMode()) {
-        // Store the system prompt and goal message before clearing
-        const messages = this.executorMessageManager.getMessages();
-        const systemMessages = messages.filter(msg => msg instanceof SystemMessage);
-        // Clear all messages
-        this.executorMessageManager.clear();
-
-        // Re-add system prompt and goal
-        if (systemMessages.length > 0) {
-          this.executorMessageManager.add(systemMessages[0], 0);
-        }
-
-        Logging.log(
-          "NewAgent",
-          "Limited context mode: Reset executor message history",
-          "info"
-        );
-      }
-
-      // Build execution context with planner output
-      const executionContext = this._buildPredefinedExecutionContext(plan, plan.actions);
-      this.executorMessageManager.addSystemReminder(executionContext);
-
-      // Execute the actions
-      const executorResult = await this._runExecutor(plan.actions);
-
-      // Handle human input if needed
-      if (executorResult.requiresHumanInput) {
-        const humanResponse = await this._waitForHumanInput();
-        if (humanResponse === 'abort') {
-          this._publishMessage('❌ Task aborted by human', 'assistant');
-          throw new AbortError('Task aborted by human');
-        }
-        this._publishMessage('✅ Human completed manual action. Continuing...', 'thinking');
-        this.executorMessageManager.addAI('Human has completed the requested manual action. Continuing with the task.');
-        this.executionContext.clearHumanInputState();
-      }
-    }
-
-    // Check if we hit iteration limit
-    if (!allComplete && iterations >= MAX_PREDEFINED_PLAN_ITERATIONS) {
-      this._publishMessage(
-        `Predefined plan did not complete within ${MAX_PREDEFINED_PLAN_ITERATIONS} iterations`,
-        "error"
-      );
-      throw new Error(
-        `Maximum predefined plan iterations (${MAX_PREDEFINED_PLAN_ITERATIONS}) reached`
-      );
-    }
-
-    Logging.log("NewAgent", `Predefined plan execution complete`, "info");
   }
 
   private async _executeDynamic(task: string): Promise<void> {
@@ -1320,240 +1087,6 @@ export class NewAgent {
       // Clean up subscription
       subscription.unsubscribe();
     }
-  }
-
-  /**
-   * Run the predefined planner to track TODO progress and generate actions
-   */
-  private async _runPredefinedPlanner(
-    task: string,
-    currentTodos: string
-  ): Promise<PredefinedPlannerResult> {
-    try {
-      this.executionContext.incrementMetric("observations");
-
-      // Get browser state with screenshot
-      const browserStateMessage = await this._getBrowserStateMessage(
-        /* includeScreenshot */ this.executionContext.supportsVision(),
-        /* simplified */ true,
-        /* screenshotSize */ "large"
-      );
-
-      // Get execution metrics for analysis
-      const metrics = this.executionContext.getExecutionMetrics();
-      const errorRate = metrics.toolCalls > 0
-        ? ((metrics.errors / metrics.toolCalls) * 100).toFixed(1)
-        : "0";
-      const elapsed = Date.now() - metrics.startTime;
-
-      // Check if we're in limited context mode
-      const isLimitedContext = this.executionContext.isLimitedContextMode();
-
-      // Get execution history only if NOT in limited context mode
-      let fullHistory = "";
-      if (!isLimitedContext) {
-        const readOnlyMM = new MessageManagerReadOnly(this.executorMessageManager);
-        fullHistory = readOnlyMM.getFilteredAsString([
-          MessageType.SYSTEM,
-          MessageType.SCREENSHOT,
-          MessageType.BROWSER_STATE
-        ]);
-      }
-
-      // Get reasoning history for context (always include as it's lightweight)
-      const recentReasoning = this.executionContext.getReasoningHistory(5);
-
-      // Get LLM with structured output
-      const llm = await getLLM({
-        temperature: 0.2,
-        maxTokens: 4096,
-      });
-      const structuredLLM = llm.withStructuredOutput(PredefinedPlannerOutputSchema);
-
-      // Predefined planner prompt
-      const systemPrompt = generatePredefinedPlannerPrompt();
-
-      // Build user prompt incrementally
-      let userPrompt = `Current TODO List:\n${currentTodos}\n\n`;
-
-      // Add execution metrics
-      userPrompt += `EXECUTION METRICS:\n`;
-      userPrompt += `- Tool calls: ${metrics.toolCalls} (${metrics.errors} errors, ${errorRate}% failure rate)\n`;
-      userPrompt += `- Observations taken: ${metrics.observations}\n`;
-      userPrompt += `- Time elapsed: ${(elapsed / 1000).toFixed(1)} seconds\n`;
-
-      // Add warning flags if needed
-      if (parseInt(errorRate) > 30) {
-        userPrompt += `⚠️ HIGH ERROR RATE - Current approach may be failing\n`;
-      }
-      if (metrics.toolCalls > 10 && metrics.errors > 5) {
-        userPrompt += `⚠️ MANY ATTEMPTS - May be stuck in a loop\n`;
-      }
-
-      // Add full execution history if not in limited context
-      if (!isLimitedContext && fullHistory) {
-        userPrompt += `\nFULL EXECUTION HISTORY:\n`;
-        userPrompt += `${fullHistory || "No execution yet"}\n\n`;
-      }
-
-      // Add reasoning history (always, as it's lightweight)
-      if (recentReasoning.length > 0) {
-        userPrompt += `YOUR PREVIOUS REASONING (what you thought would work):\n`;
-        userPrompt += recentReasoning.map(r => {
-          try {
-            const parsed = JSON.parse(r);
-            return `- ${parsed.reasoning || r}`;
-          } catch {
-            return `- ${r}`;
-          }
-        }).join("\n");
-        userPrompt += "\n\n";
-      }
-
-      // Add task goal
-      userPrompt += `Task Goal: ${task}\n\n`;
-
-      // Add analysis instructions if we have history
-      if (!isLimitedContext && fullHistory) {
-        userPrompt += `ANALYZE the execution history above to understand:\n`;
-        userPrompt += `1. What the executor actually attempted (check tool calls and results)\n`;
-        userPrompt += `2. What failed and why (check error messages)\n`;
-        userPrompt += `3. Whether your previous plan was executed correctly\n\n`;
-      }
-
-      // Add final instructions
-      userPrompt += `Based on the `;
-      if (!isLimitedContext) {
-        userPrompt += `metrics, execution history, and `;
-      }
-      userPrompt += `current browser state:\n`;
-      userPrompt += `1. Update the TODO list marking completed items with [x]\n`;
-      userPrompt += `2. Identify the next uncompleted TODO to work on\n`;
-      userPrompt += `3. Provide specific actions to complete that TODO\n`;
-      userPrompt += `4. If all TODOs are complete, set allTodosComplete=true and provide a finalAnswer`;
-
-      const messages = [
-        new SystemMessage(systemPrompt),
-        new HumanMessage(userPrompt),
-        browserStateMessage,
-      ];
-
-      // Log token counts for individual messages and total
-      this._logMessageTokens(messages, `Predefined Planner (iteration ${this.executionContext.getExecutionMetrics().observations})`);
-
-      // Get structured response with retry
-      const plan = await invokeWithRetry<PredefinedPlannerOutput>(
-        structuredLLM,
-        messages,
-        3,
-        { signal: this.executionContext.abortSignal }
-      );
-
-      // Store structured reasoning in context as JSON
-      const plannerState = {
-        todoMarkdown: plan.todoMarkdown,
-        observation: plan.observation,
-        reasoning: plan.reasoning,
-        allTodosComplete: plan.allTodosComplete,
-        actionsPlanned: plan.actions.length,
-      };
-      this.executionContext.addReasoning(JSON.stringify(plannerState));
-
-      // Publish updated TODO list
-      this._publishMessage(plan.todoMarkdown, "thinking");
-      this.executionContext.setTodoList(plan.todoMarkdown);
-
-      // Publish reasoning
-      this.pubsub.publishMessage(
-        PubSub.createMessage(plan.reasoning, "thinking")
-      );
-
-      // Log planner decision
-      Logging.log(
-        "NewAgent",
-        plan.allTodosComplete
-          ? `Predefined Planner: All TODOs complete with final answer`
-          : `Predefined Planner: ${plan.actions.length} actions planned for current TODO`,
-        "info",
-      );
-
-
-      return {
-        ok: true,
-        output: plan,
-      };
-    } catch (error) {
-      this.executionContext.incrementMetric("errors");
-      return {
-        ok: false,
-        error: `Predefined planning failed: ${error instanceof Error ? error.message : String(error)}`,
-      };
-    }
-  }
-
-  /**
-   * Build execution context for predefined plans
-   */
-  private _buildPredefinedExecutionContext(
-    plan: PredefinedPlannerOutput,
-    actions: string[]
-  ): string {
-    const supportsVision = this.executionContext.supportsVision();
-
-    const analysisSection = supportsVision
-      ? `  <screenshot-analysis>
-    The screenshot shows the webpage with nodeId numbers overlaid as visual labels on elements.
-    These appear as numbers in boxes/labels (e.g., [21], [42], [156]) directly on the webpage elements.
-    YOU MUST LOOK AT THE SCREENSHOT FIRST to identify which nodeId belongs to which element.
-  </screenshot-analysis>`
-      : `  <text-only-analysis>
-    You are operating in TEXT-ONLY mode without screenshots.
-    Use the browser state text to identify elements by their nodeId, text content, and attributes.
-    Focus on element descriptions and hierarchical structure in the browser state.
-  </text-only-analysis>`;
-
-    const processSection = supportsVision
-      ? `  <visual-execution-process>
-    1. EXAMINE the screenshot - See the webpage with nodeId labels overlaid on elements
-    2. LOCATE the element you need to interact with visually
-    3. IDENTIFY its nodeId from the label shown on that element in the screenshot
-    // 4. EXECUTE using that nodeId in your tool call
-  </visual-execution-process>`
-      : `  <text-execution-process>
-    1. ANALYZE the browser state text to understand page structure
-    2. LOCATE elements by their text content, type, and attributes
-    3. IDENTIFY the correct nodeId from the browser state
-    4. EXECUTE using that nodeId in your tool call
-  </text-execution-process>`;
-
-    const guidelines = supportsVision
-      ? `    - The nodeIds are VISUALLY LABELED on the screenshot - you must look at it
-    - The text-based browser state is supplementary - the screenshot is your primary reference
-    - Batch multiple tool calls in one response when possible (reduces latency)
-    - Call 'done' when the current actions are completed`
-      : `    - Use the text-based browser state as your primary reference
-    - Match elements by their text content and attributes
-    - Batch multiple tool calls in one response when possible (reduces latency)
-    - Call 'done' when the current actions are completed`;
-
-    return `<predefined-plan-context>
-  <observation>${plan.observation}</observation>
-  <reasoning>${plan.reasoning}</reasoning>
-</predefined-plan-context>
-
-<execution-instructions>
-${analysisSection}
-
-  <actions-to-execute>
-${actions.map((action, i) => `    ${i + 1}. ${action}`).join('\n')}
-  </actions-to-execute>
-
-${processSection}
-
-  <execution-guidelines>
-${guidelines}
-  </execution-guidelines>
-</execution-instructions>`;
   }
 
   /**

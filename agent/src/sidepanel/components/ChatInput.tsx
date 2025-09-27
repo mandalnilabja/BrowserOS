@@ -377,7 +377,7 @@ export function ChatInput({ isConnected, isProcessing }: ChatInputProps) {
                         const agent = agents.find(a => a.id === agentId)
                         if (!agent) return
                         // Agent execution will show status via TypingIndicator
-                        // Send predefined plan execution request
+                        // Send dynamic execution request
                         const contextTabs = getContextTabs()
                         const tabIds = contextTabs.length > 0 ? contextTabs.map(tab => tab.id) : undefined
                         setProcessing(true)
@@ -386,14 +386,7 @@ export function ChatInput({ isConnected, isProcessing }: ChatInputProps) {
                           tabIds,
                           source: 'sidepanel',
                           metadata: {
-                            source: 'sidepanel',
-                            executionMode: 'predefined',
-                            predefinedPlan: {
-                              agentId: agent.id,
-                              steps: agent.steps,
-                              goal: agent.goal,
-                              name: agent.name
-                            }
+                            source: 'sidepanel'
                           }
                         })
                         // Reset input and close palette

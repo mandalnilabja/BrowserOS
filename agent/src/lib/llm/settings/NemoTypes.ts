@@ -80,6 +80,6 @@ export type NemoPrefObject = z.infer<typeof NemoPrefObjectSchema>
 /**
  * Browser preference keys for Nemo
  */
-export const BROWSEROS_PREFERENCE_KEYS = {
+export const NEMO_PREFERENCE_KEYS = {
   PROVIDERS: 'nemo.providers'
 } as const

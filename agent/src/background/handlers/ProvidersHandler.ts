@@ -2,7 +2,7 @@ import { MessageType } from '@/lib/types/messaging'
 import { PortMessage } from '@/lib/runtime/PortMessaging'
 import { LLMSettingsReader } from '@/lib/llm/settings/LLMSettingsReader'
 import { langChainProvider } from '@/lib/llm/LangChainProvider'
-import { NemoProvidersConfigSchema, BROWSEROS_PREFERENCE_KEYS } from '@/lib/llm/settings/NemoTypes'
+import { NemoProvidersConfigSchema, NEMO_PREFERENCE_KEYS } from '@/lib/llm/settings/NemoTypes'
 import { Logging } from '@/lib/utils/Logging'
 
 /**
@@ -56,13 +56,13 @@ export class ProvidersHandler {
   ): void {
     try {
       const config = NemoProvidersConfigSchema.parse(message.payload)
-      const browserOS = (chrome as any)?.browserOS as { 
+      const nemo = (chrome as any)?.browserOS as { 
         setPref?: (name: string, value: any, pageId?: string, cb?: (ok: boolean) => void) => void 
       } | undefined
       
-      if (browserOS?.setPref) {
-        browserOS.setPref(
-          BROWSEROS_PREFERENCE_KEYS.PROVIDERS,
+      if (nemo?.setPref) {
+        nemo.setPref(
+          NEMO_PREFERENCE_KEYS.PROVIDERS,
           JSON.stringify(config),
           undefined,
           (success?: boolean) => {
@@ -81,7 +81,7 @@ export class ProvidersHandler {
       } else {
         // Fallback to chrome.storage.local
         try {
-          const key = BROWSEROS_PREFERENCE_KEYS.PROVIDERS
+          const key = NEMO_PREFERENCE_KEYS.PROVIDERS
           chrome.storage?.local?.set({ [key]: JSON.stringify(config) }, () => {
             try { langChainProvider.clearCache() } catch (_) {}
             this.lastProvidersConfigJson = JSON.stringify(config)
