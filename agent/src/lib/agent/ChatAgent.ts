@@ -184,7 +184,7 @@ export class ChatAgent {
     const selectedTabIds = this.executionContext.getSelectedTabIds()
     
     // Check if user has explicitly selected multiple tabs (using "@" selector)
-    // If only 1 tab or null, it's likely just the default current tab from NxtScape
+    // If only 1 tab or null, it's likely just the default current tab from Nemo
     const hasExplicitSelection = selectedTabIds && selectedTabIds.length > 1
     
     if (hasExplicitSelection) {

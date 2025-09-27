@@ -14,13 +14,13 @@
 
 ## Overview
 
-This document outlines the design for integrating Klavis MCP (Model Context Protocol) servers into the Nxtscape Chrome extension using the Klavis REST API. The integration allows our AI agents to interact with external services like YouTube, Gmail, GitHub, etc., through a unified interface. All MCP-related components will be organized under the `src/lib/tools/mcp/` directory to maintain consistency with the existing tool structure.
+This document outlines the design for integrating Klavis MCP (Model Context Protocol) servers into the Nemo Chrome extension using the Klavis REST API. The integration allows our AI agents to interact with external services like YouTube, Gmail, GitHub, etc., through a unified interface. All MCP-related components will be organized under the `src/lib/tools/mcp/` directory to maintain consistency with the existing tool structure.
 
 ### Goals
 - **API-First Approach**: Use Klavis REST API directly instead of SDK
 - **Cloud-Managed State**: Leverage Klavis cloud for all server state management
 - **User Isolation**: Support multiple users with browser-specific IDs
-- **Seamless Integration**: MCP tools should work like native Nxtscape tools
+- **Seamless Integration**: MCP tools should work like native Nemo tools
 - **Type Safety**: Full TypeScript support with Zod validation
 - **Progressive Enhancement**: Start simple, add complexity incrementally
 
@@ -45,7 +45,7 @@ This document outlines the design for integrating Klavis MCP (Model Context Prot
 │                                                            │         │
 │                                                            ▼         │
 │                          ┌─────────────────────────────────────────┐│
-│                          │       NxtscapeTool (Base Class)         ││
+│                          │       NemoTool (Base Class)         ││
 │                          │  - Standard tool interface              ││
 │                          │  - Built-in LLM access                  ││
 │                          └─────────────────────────────────────────┘│
@@ -123,7 +123,7 @@ POST /mcp-server/instance/create
 {
   serverName: Klavis.McpServerName, // e.g., 'youtube', 'gmail'
   userId: string,                   // Browser-specific user ID
-  platformName: "Nxtscape"
+  platformName: "Nemo"
 }
 // Returns: { serverUrl, instanceId, oauthUrl? }
 
@@ -160,13 +160,13 @@ Each browser instance gets a unique user ID stored in Chrome local storage:
 ```typescript
 // Generate/retrieve user ID
 async function getUserId(): Promise<string> {
-  const storage = await chrome.storage.local.get(['nxtscape_user_id']);
-  if (storage.nxtscape_user_id) {
-    return storage.nxtscape_user_id;
+  const storage = await chrome.storage.local.get(['Nemo_user_id']);
+  if (storage.Nemo_user_id) {
+    return storage.Nemo_user_id;
   }
   
-  const userId = `nxtscape_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  await chrome.storage.local.set({ nxtscape_user_id: userId });
+  const userId = `Nemo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  await chrome.storage.local.set({ Nemo_user_id: userId });
   return userId;
 }
 ```

@@ -133,7 +133,7 @@ export function useAnalytics(config: Partial<AnalyticsConfig> = {}) {
 
 function getSessionId(): string {
   // Get or create session ID
-  const key = 'nxtscape_session_id'
+  const key = 'Nemo_session_id'
   let sessionId = sessionStorage.getItem(key)
   
   if (!sessionId) {

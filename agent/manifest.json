@@ -43,7 +43,7 @@
         "default": "Ctrl+E",
         "mac": "Command+E"
       },
-      "description": "Toggle the Nxtscape side panel"
+      "description": "Toggle the Nemo side panel"
     }
   },
   "icons": {

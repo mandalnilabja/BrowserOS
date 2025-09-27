@@ -61,7 +61,7 @@ async startSession(metadata: SessionMetadata): Promise<{ parent?: string }> {
 }
 ```
 
-#### Integration in NxtScape (`src/lib/core/NxtScape.ts`)
+#### Integration in Nemo (`src/lib/core/Nemo.ts`)
 - **Deferred Initialization**: Telemetry session only starts on first task (not on extension open)
 - **Task Tracking**: Each task gets a `task_N_start` and `task_N_[success|error|paused]` event
 - **Score Aggregation**: Tracks `weighted_total` scores across tasks for session average
@@ -163,10 +163,10 @@ static async runSingleTest(log: any, index: number, v1ExperimentId: string, v2Ex
   await this.performCompleteCleanup()
   
   // Run test with v2 code
-  const experimentNxtScape = new NxtScape({ 
+  const experimentNemo = new Nemo({ 
     experimentId: v2ExperimentId  // Enables dual logging
   })
-  await experimentNxtScape.run({ query: log.input })
+  await experimentNemo.run({ query: log.input })
   
   // Fetch v1 scores from historical data
   const decisionSpan = await this.fetchDecisionSpan(log, apiKey)
@@ -193,12 +193,12 @@ private static async performCompleteCleanup(): Promise<void> {
 ### 5. Data Flow
 
 #### User Interaction → Braintrust Flow:
-1. **User Query** → Side Panel → Background Script → `NxtScape.run()`
+1. **User Query** → Side Panel → Background Script → `Nemo.run()`
 2. **Session Start** → `BraintrustEventCollector.startSession()` creates parent span
-3. **Task Start** → `NxtScape._finalizeTask()` logs `task_N_start` event
+3. **Task Start** → `Nemo._finalizeTask()` logs `task_N_start` event
 4. **Tool Execution** → `createTrackedTool()` wraps tool → logs metrics via `wrapTraced`
 5. **LLM Scoring** → `LLMJudge.scoreTaskCompletionWithContext()` → multi-dimensional scores
-6. **Task End** → `NxtScape._finalizeTask()` logs `task_N_[outcome]` with scores
+6. **Task End** → `Nemo._finalizeTask()` logs `task_N_[outcome]` with scores
 7. **Session End** → `BraintrustEventCollector.endSession()` with aggregated scores
 
 #### Key Data Structures:
@@ -279,8 +279,8 @@ private static async performCompleteCleanup(): Promise<void> {
 - `src/evals/tool-wrapper.ts:38-227` - Dynamic tool wrapping with wrapTraced
 - `src/evals/scoring/LLMJudge.ts:256-426` - Full context scoring implementation
 - `src/evals/ExperimentRunner.ts:857-949` - Single test execution with cleanup
-- `src/lib/core/NxtScape.ts:531-617` - Session management and score aggregation
-- `src/lib/core/NxtScape.ts:619-817` - Task finalization with dual logging
+- `src/lib/core/Nemo.ts:531-617` - Session management and score aggregation
+- `src/lib/core/Nemo.ts:619-817` - Task finalization with dual logging
 - `src/background/index.ts:72-208` - Experiment UI integration
 
 ## Historical Context (from thoughts/)
@@ -307,7 +307,7 @@ No existing research documents found specifically about the Braintrust evaluatio
 - Structured error format not consistently applied
 
 ### 4. **Tight Coupling**
-- `NxtScape` directly imports and uses `BraintrustEventCollector`
+- `Nemo` directly imports and uses `BraintrustEventCollector`
 - LLM Judge directly accesses ExecutionContext internals
 - Experiment runner has hardcoded cleanup logic
 

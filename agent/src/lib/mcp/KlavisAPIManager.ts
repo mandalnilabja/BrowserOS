@@ -5,8 +5,8 @@
 
 import { KlavisAPIClient, type CreateServerResponse, type UserInstance } from './KlavisAPIClient'
 
-const NXTSCAPE_USER_ID_KEY = 'nxtscape_user_id'
-const PLATFORM_NAME = 'Nxtscape'
+const NEMO_USER_ID_KEY = 'Nemo_user_id'
+const PLATFORM_NAME = 'Nemo'
 
 export class KlavisAPIManager {
   private static instance: KlavisAPIManager | null = null
@@ -37,7 +37,7 @@ export class KlavisAPIManager {
 
   /**
    * Get or create browser-specific user ID
-   * Format: nxtscape_<timestamp>_<random>
+   * Format: Nemo_<timestamp>_<random>
    */
   async getUserId(): Promise<string> {
     // Return cached user ID if available
@@ -47,9 +47,9 @@ export class KlavisAPIManager {
 
     // Try to get from Chrome storage
     try {
-      const storage = await chrome.storage.local.get([NXTSCAPE_USER_ID_KEY])
-      if (storage[NXTSCAPE_USER_ID_KEY]) {
-        this.userId = storage[NXTSCAPE_USER_ID_KEY] as string
+      const storage = await chrome.storage.local.get([NEMO_USER_ID_KEY])
+      if (storage[NEMO_USER_ID_KEY]) {
+        this.userId = storage[NEMO_USER_ID_KEY] as string
         return this.userId
       }
     } catch (error) {
@@ -59,11 +59,11 @@ export class KlavisAPIManager {
     // Generate new user ID
     const timestamp = Date.now()
     const random = Math.random().toString(36).substr(2, 9)
-    this.userId = `nxtscape_${timestamp}_${random}`
+    this.userId = `Nemo_${timestamp}_${random}`
     
     // Save to Chrome storage
     try {
-      await chrome.storage.local.set({ [NXTSCAPE_USER_ID_KEY]: this.userId })
+      await chrome.storage.local.set({ [NEMO_USER_ID_KEY]: this.userId })
     } catch (error) {
       console.warn('Could not save to Chrome storage:', error)
     }

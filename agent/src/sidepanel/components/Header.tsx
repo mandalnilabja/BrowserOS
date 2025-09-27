@@ -5,8 +5,7 @@ import { MessageType } from '@/lib/types/messaging'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { SettingsModal } from './SettingsModal'
 import { HelpSection } from './HelpSection'
-// import { ExperimentModal } from './ExperimentModal'  // Removed - old evals system deprecated
-import { HelpCircle, Settings, Pause, RotateCcw, ChevronDown, Plus, Trash2, Star } from 'lucide-react'
+import { Settings, Pause, RotateCcw, HelpCircle } from 'lucide-react'
 import { useSettingsStore } from '@/sidepanel/stores/settingsStore'
 import { useEffect } from 'react'
 import { z } from 'zod'
@@ -14,9 +13,6 @@ import { NemoProvidersConfig, NemoProvidersConfigSchema } from '@/lib/llm/settin
 import { MCP_SERVERS, type MCPServerConfig } from '@/config/mcpServers'
 
 const GITHUB_REPO_URL: string = 'https://github.com/nemo-ai/Nemo'
-
-// Feature flag to enable/disable MCP connector dropdown
-const MCP_FEATURE_ENABLED = true
 
 interface HeaderProps {
   onReset: () => void
@@ -65,22 +61,9 @@ export const Header = memo(function Header({ onReset, showReset, isProcessing }:
     setShowSettings(true)
   }
 
-  const handleStarClick = () => {
-    trackClick('github_star')
-    window.open(GITHUB_REPO_URL, '_blank', 'noopener,noreferrer')
-  }
-
-  const handleMCPInstall = (serverId: string) => {
-    trackClick(`mcp_install_${serverId}`)
-    setShowMCPDropdown(false)
-    sendMessage(MessageType.MCP_INSTALL_SERVER, { serverId })
-  }
-
-  const handleMCPDelete = (instanceId: string, serverName: string) => {
-    trackClick(`mcp_delete_${serverName}`)
-    if (confirm(`Are you sure you want to remove ${serverName}?`)) {
-      sendMessage(MessageType.MCP_DELETE_SERVER, { instanceId })
-    }
+  const handleHelpClick = () => {
+    trackClick('open_help')
+    setShowHelp(true)
   }
 
   const fetchInstalledServers = () => {
@@ -104,6 +87,22 @@ export const Header = memo(function Header({ onReset, showReset, isProcessing }:
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [showMCPDropdown])
+
+  // Close settings and help dropdowns when clicking outside
+  useEffect(() => {
+    if (!showSettings && !showHelp) return
+    
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (!target.closest('.settings-dropdown') && !target.closest('.help-dropdown')) {
+        setShowSettings(false)
+        setShowHelp(false)
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showSettings, showHelp])
 
   // Load providers config for default provider dropdown
   useEffect(() => {
@@ -175,40 +174,6 @@ export const Header = memo(function Header({ onReset, showReset, isProcessing }:
         className="relative flex items-center justify-between h-12 px-3 bg-[hsl(var(--header))] border-b border-border/50"
         role="banner"
       >
-
-        <div className="flex items-center ">
-          {providersConfig && (
-            <div className="relative mt-0.5">
-              <select
-                className={`h-9 w-26 pl-2 pr-8 rounded-lg border ${theme === 'gray' ? 'border-white/40' : 'border-border'} bg-[hsl(var(--header))] text-foreground text-xs font-light appearance-none`}
-                value={providersConfig.defaultProviderId}
-                onChange={(e) => {
-                  const nextId = e.target.value
-                  const nextProviders = providersConfig.providers.map(p => ({ ...p, isDefault: p.id === nextId }))
-                  const nextConfig: NemoProvidersConfig = {
-                    defaultProviderId: nextId,
-                    providers: nextProviders
-                  }
-                  try {
-                    NemoProvidersConfigSchema.parse(nextConfig)
-                    setProvidersConfig(nextConfig)
-                    const ok = sendMessage<NemoProvidersConfig>(MessageType.SAVE_LLM_PROVIDERS as any, nextConfig)
-                    if (!ok) setProvidersError('Failed to send save message')
-                  } catch (err) {
-                    setProvidersError(err instanceof Error ? err.message : String(err))
-                  }
-                }}
-                aria-label="Select default provider"
-                title="Select default provider"
-              >
-                {providersConfig.providers.map(p => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground opacity-80" />
-            </div>
-          )}
-        </div>
         
 
 
@@ -242,6 +207,18 @@ export const Header = memo(function Header({ onReset, showReset, isProcessing }:
             </Button>
           )}
 
+          {/* Help button */}
+          <Button
+            onClick={handleHelpClick}
+            variant="ghost"
+            size="sm"
+            className="h-9 w-9 p-0 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300"
+            aria-label="Open help"
+            title="Help"
+          >
+            <HelpCircle className="w-4 h-4" />
+          </Button>
+
           {/* Settings button - Last position (rightmost) */}
           <Button
             onClick={handleSettingsClick}
@@ -254,23 +231,26 @@ export const Header = memo(function Header({ onReset, showReset, isProcessing }:
           </Button>
         </nav>
 
-        {/* Settings Modal */}
-        <SettingsModal 
-          isOpen={showSettings}
-          onClose={() => setShowSettings(false)}
-          onOpenHelp={() => {
-            setShowSettings(false)
-            setShowHelp(true)
-          }}
-        />
+        {/* Settings Modal - positioned relative to header */}
+        <div className="relative settings-dropdown">
+          <SettingsModal 
+            isOpen={showSettings}
+            onClose={() => setShowSettings(false)}
+            onOpenHelp={() => {
+              setShowSettings(false)
+              setShowHelp(true)
+            }}
+          />
+        </div>
+
+        {/* Help Section - positioned relative to header */}
+        <div className="relative help-dropdown">
+          <HelpSection 
+            isOpen={showHelp}
+            onClose={() => setShowHelp(false)}
+          />
+        </div>
       </header>
-
-
-      {/* Help Section */}
-      <HelpSection 
-        isOpen={showHelp}
-        onClose={() => setShowHelp(false)}
-      />
     </>
   )
 })

@@ -3,7 +3,7 @@
  * using chrome.storage.local with automatic JSON serialization
  */
 export class StorageManager {
-  private static readonly STORAGE_PREFIX = 'nxtscape_agent_'
+  private static readonly STORAGE_PREFIX = 'Nemo_agent_'
   
   /**
    * Store a value with automatic JSON serialization

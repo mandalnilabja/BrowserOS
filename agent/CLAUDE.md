@@ -62,7 +62,7 @@ NEVER proactively create documentation files (*.md) or README files. Only create
   - Styles → .css (using Tailwind CSS)
 - Prefer named exports for components
 - Types/Interfaces in PascalCase (e.g. User, ButtonProps)
-- OUR PRODUCT NAME IS Nxtscape (the "s" is small letter) -- so use that name correctly when naming things.
+- OUR PRODUCT NAME IS Nemo (the "s" is small letter) -- so use that name correctly when naming things.
 
 # Functions & Logic
 - Keep functions short and single-purpose (<20 lines).
@@ -349,7 +349,7 @@ To debug:
 ### Core Framework
 This is a Chrome extension that provides AI-powered web automation using LLM agents. The architecture is built around:
 
-1. **NxtScape Core** (`src/lib/core/NxtScape.ts`) - Main orchestration layer that manages execution context and delegates to BrowserAgent
+1. **Nemo Core** (`src/lib/core/Nemo.ts`) - Main orchestration layer that manages execution context and delegates to BrowserAgent
 2. **BrowserAgent** (`src/lib/agent/BrowserAgent.ts`) - Unified agent that handles all task execution through planning and tool invocation
 3. **Browser Context** - Puppeteer-core integration for Chrome extension tab control
 4. **Tool System** - Modular browser automation tools registered with ToolManager
@@ -430,7 +430,7 @@ This is a Chrome extension that provides AI-powered web automation using LLM age
 
 ### LLM Integration
 - **LangChainProviderFactory** (`src/lib/llm/LangChainProviderFactory.ts`) - Abstraction over multiple LLM providers
-- **Provider Strategies**: AnthropicStrategy, OpenAIStrategy, OllamaStrategy, NxtscapeStrategy
+- **Provider Strategies**: AnthropicStrategy, OpenAIStrategy, OllamaStrategy, NemoStrategy
 - **LLM Settings**: LLMSettingsReader for configuration management
 - **Supported Providers**: Claude (Anthropic), OpenAI, Ollama
 - **LangChain Integration** - Uses @langchain packages for agent execution
@@ -604,7 +604,7 @@ describe('MyTool', () => {
 ### Execution Flow
 
 ```
-User Query → NxtScape.run() → BrowserAgent.execute()
+User Query → Nemo.run() → BrowserAgent.execute()
                                         ↓
                               ClassificationTool
                                    ↙        ↘
@@ -620,7 +620,7 @@ User Query → NxtScape.run() → BrowserAgent.execute()
                                            if needed
 ```
 
-1. **NxtScape.run()** - Main entry point that initializes execution context and calls BrowserAgent
+1. **Nemo.run()** - Main entry point that initializes execution context and calls BrowserAgent
 2. **BrowserAgent.execute()** - The unified agent that handles all tasks through a planning and execution loop
 3. **ClassificationTool** - Determines if task is simple (direct execution) or complex (needs planning)
 4. **PlannerTool** - Creates multi-step plans for complex tasks (typically 3 steps at a time)
@@ -642,7 +642,7 @@ User Query → NxtScape.run() → BrowserAgent.execute()
 
 ## Key Files Reference
 
-- `src/lib/core/NxtScape.ts` - Main orchestration class
+- `src/lib/core/Nemo.ts` - Main orchestration class
 - `src/lib/agent/BrowserAgent.ts` - Unified agent handling all task execution
 - `src/lib/browser/BrowserContext.ts` - Multi-tab browser management with puppeteer-core
 - `src/lib/tools/ToolManager.ts` - Tool registration and management system

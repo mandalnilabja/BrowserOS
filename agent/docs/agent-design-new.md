@@ -365,14 +365,14 @@ export function generateSystemPrompt(toolDescriptions: string): string {}
 
 ## Integration & Future
 
-### Integration with Nxtscape
+### Integration with Nemo
 
 ```typescript
-// src/lib/core/Nxtscape.ts
+// src/lib/core/Nemo.ts
 import { BrowserAgent } from '@/lib/agent/BrowserAgent';
 import { ExecutionContext } from '@/lib/runtime/ExecutionContext';
 
-export class Nxtscape {
+export class Nemo {
   private executionContext: ExecutionContext;
 
   async run(task: string): Promise<void> {

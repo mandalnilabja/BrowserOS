@@ -2,7 +2,7 @@
 
 ## Overview
 
-Evals2 is a simplified evaluation framework for the Nxtscape browser automation system. It represents a complete rewrite of the original evaluation system, achieving a 75% reduction in code complexity (500 lines vs 2000+) while maintaining full functionality.
+Evals2 is a simplified evaluation framework for the Nemo browser automation system. It represents a complete rewrite of the original evaluation system, achieving a 75% reduction in code complexity (500 lines vs 2000+) while maintaining full functionality.
 
 ## Architecture
 
@@ -12,7 +12,7 @@ The evals2 system consists of four main components:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                    NxtScape                         │
+│                    Nemo                         │
 │  (Session Lifecycle & Scoring Trigger)              │
 └────────────────────┬────────────────────────────────┘
                      │
@@ -79,7 +79,7 @@ The evals2 system consists of four main components:
 
 ### 1. Session Initialization
 ```typescript
-// In NxtScape.run()
+// In Nemo.run()
 if (process.env.ENABLE_EVALS2 === 'true') {
   await SimpleBraintrustEventManager.startConversationSession({
     sessionId: executionContext.sessionId,
@@ -112,7 +112,7 @@ Map<string, {
 
 ### 4. Scoring After Task
 ```typescript
-// In NxtScape.run() after agent.execute()
+// In Nemo.run() after agent.execute()
 const scores = await SimplifiedScorer.scoreMessages({
   messages: executionContext.messageManager.messages,
   toolMetrics: executionContext.toolMetrics,
@@ -193,7 +193,7 @@ OPENAI_API_KEY=your-openai-api-key
 
 The system requires minimal integration with only two hooks:
 
-1. **NxtScape** (`src/lib/core/NxtScape.ts`):
+1. **Nemo** (`src/lib/core/Nemo.ts`):
    - Session start/end lifecycle
    - Scoring trigger after task completion
 
@@ -397,4 +397,4 @@ class SimpleBraintrustLogger {
 
 ## Conclusion
 
-Evals2 represents a significant improvement in evaluation system design, prioritizing simplicity, performance, and reliability. The system's modular architecture and minimal integration requirements make it easy to maintain and extend while providing comprehensive evaluation capabilities for the Nxtscape browser automation system.
+Evals2 represents a significant improvement in evaluation system design, prioritizing simplicity, performance, and reliability. The system's modular architecture and minimal integration requirements make it easy to maintain and extend while providing comprehensive evaluation capabilities for the Nemo browser automation system.

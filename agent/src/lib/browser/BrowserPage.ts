@@ -690,17 +690,17 @@ export class BrowserPage {
    * Auto-removes after 3 seconds
    */
   async showPointer(x: number, y: number, text?: string): Promise<void> {
-    const pointerId = `nxtscape-pointer-${Date.now()}`;
+    const pointerId = `Nemo-pointer-${Date.now()}`;
 
     await this.executeJavaScript(`
       (function() {
         // Remove any existing pointer
-        const existing = document.querySelector('.nxtscape-pointer');
+        const existing = document.querySelector('.Nemo-pointer');
         if (existing) existing.remove();
         
         // Create pointer container
         const pointer = document.createElement('div');
-        pointer.className = 'nxtscape-pointer';
+        pointer.className = 'Nemo-pointer';
         pointer.id = '${pointerId}';
         
         // Style the pointer container

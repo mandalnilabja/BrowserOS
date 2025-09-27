@@ -14,7 +14,7 @@ import { MCPHandler } from './handlers/MCPHandler'
 import { PlanHandler } from './handlers/PlanHandler'
 
 /**
- * Background script for the Nxtscape extension
+ * Background script for the Nemo extension
  * 
  * This is now a thin orchestration layer that:
  * 1. Sets up message routing
@@ -259,7 +259,7 @@ async function toggleSidePanel(tabId: number): Promise<void> {
  * Initialize the extension
  */
 function initialize(): void {
-  Logging.log('Background', 'Nxtscape extension initializing')
+  Logging.log('Background', 'Nemo extension initializing')
   Logging.logMetric('extension_initialized')
   
   // Register all handlers
@@ -301,7 +301,7 @@ function initialize(): void {
     }
   })
   
-  Logging.log('Background', 'Nxtscape extension initialized successfully')
+  Logging.log('Background', 'Nemo extension initialized successfully')
 }
 
 // Initialize the extension

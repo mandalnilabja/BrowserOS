@@ -121,7 +121,7 @@ export class BraintrustLogger {
               time_efficiency_bucket: getTimeEfficiencyBucket(score.details.totalDurationMs || duration_ms)
             },
             
-            // Original metadata passed from NxtScape
+            // Original metadata passed from Nemo
             ...metadata
           }
         });

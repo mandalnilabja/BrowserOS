@@ -12,13 +12,13 @@ The current evaluation system in `src/evals/` has:
 - Complex telemetry with Braintrust integration (BraintrustEventCollector)
 - Dynamic tool wrapping with createTrackedTool
 - Multi-dimensional LLM scoring with 6 categories
-- Tight coupling to NxtScape and BrowserAgent
+- Tight coupling to Nemo and BrowserAgent
 - Session and task tracking with parent-child spans
 
 ### Key Discoveries:
 - Tool wrapping happens at execution time in `BrowserAgent._processToolCalls()` (line 632-635)
-- Telemetry initialization in `NxtScape._initializeTelemetrySession()` (line 532-576)
-- Task finalization with scoring in `NxtScape._finalizeTask()` (line 619-817)
+- Telemetry initialization in `Nemo._initializeTelemetrySession()` (line 532-576)
+- Task finalization with scoring in `Nemo._finalizeTask()` (line 619-817)
 - LLMJudge accesses ExecutionContext directly (line 111-200)
 
 ## Desired End State
@@ -64,8 +64,8 @@ Clean up existing telemetry and evaluation hooks from the main codebase.
 
 ### Changes Required:
 
-#### 1. NxtScape.ts
-**File**: `src/lib/core/NxtScape.ts`
+#### 1. Nemo.ts
+**File**: `src/lib/core/Nemo.ts`
 **Changes**: Remove telemetry imports and usage
 
 ```typescript
@@ -698,8 +698,8 @@ if (process.env.ENABLE_EVALS2 === 'true') {
 const toolResult = await toolFunc(args);
 ```
 
-#### 2. NxtScape Integration
-**File**: `src/lib/core/NxtScape.ts`
+#### 2. Nemo Integration
+**File**: `src/lib/core/Nemo.ts`
 **Changes**: Add scoring and Braintrust logging after task completion
 
 ```typescript

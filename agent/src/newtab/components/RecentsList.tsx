@@ -14,7 +14,7 @@ export function RecentsList({ type }: RecentsListProps) {
       ]
     : [
         { id: '1', title: 'Documentation - TypeScript', url: 'typescript.org' },
-        { id: '2', title: 'GitHub - Nxtscape', url: 'github.com' },
+        { id: '2', title: 'GitHub - Nemo', url: 'github.com' },
         { id: '3', title: 'Stack Overflow', url: 'stackoverflow.com' }
       ]
   

@@ -4,14 +4,14 @@
  */
 
 (() => {
-  const GLOW_OVERLAY_ID = 'nxtscape-glow-overlay'
-  const GLOW_STYLES_ID = 'nxtscape-glow-styles'
-  const GLOW_INITIALIZED_KEY = 'nxtscape-glow-initialized'
-  const GLOW_ENABLED_KEY = 'nxtscape-glow-enabled'  // Stored in chrome.storage.local
+  const GLOW_OVERLAY_ID = 'Nemo-glow-overlay'
+  const GLOW_STYLES_ID = 'Nemo-glow-styles'
+  const GLOW_INITIALIZED_KEY = 'Nemo-glow-initialized'
+  const GLOW_ENABLED_KEY = 'Nemo-glow-enabled'  // Stored in chrome.storage.local
   
   // Check if already initialized to prevent duplicate listeners
   if ((window as any)[GLOW_INITIALIZED_KEY]) {
-    console.log('[Nxtscape] Glow animation already initialized')
+    console.log('[Nemo] Glow animation already initialized')
     return
   }
   (window as any)[GLOW_INITIALIZED_KEY] = true
@@ -27,7 +27,7 @@
     const style = document.createElement('style')
     style.id = GLOW_STYLES_ID
     style.textContent = `
-      @keyframes nxtscape-glow-pulse {
+      @keyframes Nemo-glow-pulse {
         0% {
           box-shadow:
             inset 0 0 42px 19px transparent,
@@ -51,7 +51,7 @@
         }
       }
       
-      @keyframes nxtscape-glow-fade-in {
+      @keyframes Nemo-glow-fade-in {
         from { opacity: 0; }
         to { opacity: 0.6; }
       }
@@ -67,8 +67,8 @@
         opacity: 0;
         will-change: opacity;
         animation: 
-          nxtscape-glow-pulse 3s ease-in-out infinite,
-          nxtscape-glow-fade-in 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+          Nemo-glow-pulse 3s ease-in-out infinite,
+          Nemo-glow-fade-in 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
       }
     `
     document.head.appendChild(style)
@@ -89,7 +89,7 @@
     overlay.id = GLOW_OVERLAY_ID
     document.body.appendChild(overlay)
     
-    console.log('[Nxtscape] Glow animation started')
+    console.log('[Nemo] Glow animation started')
   }
   
   /**
@@ -99,7 +99,7 @@
     const overlay = document.getElementById(GLOW_OVERLAY_ID)
     if (overlay) {
       overlay.remove()
-      console.log('[Nxtscape] Glow animation stopped')
+      console.log('[Nemo] Glow animation stopped')
     }
   }
 

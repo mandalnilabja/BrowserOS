@@ -2,7 +2,7 @@
 
 ## 1. What Are We Building?
 
-We are building an MCP (Model Context Protocol) integration for the Nxtscape browser agent using Klavis as the third-party service provider. This integration will allow users to:
+We are building an MCP (Model Context Protocol) integration for the Nemo browser agent using Klavis as the third-party service provider. This integration will allow users to:
 
 1. **Connect & Install MCP Servers**: Users can install and connect to various MCP servers (Gmail, YouTube, GitHub, Slack, etc.) through a one-time setup process
 2. **Automatic Authentication**: During installation, OAuth authentication is handled automatically for servers that require it
@@ -73,7 +73,7 @@ We are building an MCP (Model Context Protocol) integration for the Nxtscape bro
                  │           Klavis Cloud                │
                  │  ┌────────────────────────────────┐  │
                  │  │      User Instances            │  │
-                 │  │  - userId: nxtscape_123456     │  │
+                 │  │  - userId: Nemo_123456     │  │
                  │  │  - Gmail Instance (ID, URL)    │  │
                  │  │  - YouTube Instance (ID, URL)  │  │
                  │  │  - OAuth tokens & auth state   │  │
@@ -141,7 +141,7 @@ export class MCPTool {
       switch (input.action) {
         case 'getUserInstances':
           // Get all installed MCP servers for this user
-          const instances = await client.getUserInstances(userId, 'Nxtscape')
+          const instances = await client.getUserInstances(userId, 'Nemo')
           return toolSuccess(JSON.stringify({ instances }))
 
         case 'listTools':
@@ -227,14 +227,14 @@ export class KlavisAPIManager {
       return this.userId
     }
 
-    const storage = await chrome.storage.local.get(['nxtscape_user_id'])
-    if (storage.nxtscape_user_id) {
-      this.userId = storage.nxtscape_user_id as string
+    const storage = await chrome.storage.local.get(['Nemo_user_id'])
+    if (storage.Nemo_user_id) {
+      this.userId = storage.Nemo_user_id as string
       return this.userId
     }
 
-    this.userId = `nxtscape_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-    await chrome.storage.local.set({ nxtscape_user_id: this.userId })
+    this.userId = `Nemo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    await chrome.storage.local.set({ Nemo_user_id: this.userId })
     return this.userId
   }
 
@@ -249,7 +249,7 @@ export class KlavisAPIManager {
     const server = await this.client.createServerInstance({
       serverName,
       userId,
-      platformName: 'Nxtscape'
+      platformName: 'Nemo'
     })
 
     // Handle OAuth if needed

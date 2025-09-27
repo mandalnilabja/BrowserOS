@@ -289,9 +289,9 @@ private async _processMinimalTools(toolCalls: any[]): Promise<void> {
 
 ## Integration Points
 
-### 1. NxtScape Routing
+### 1. Nemo Routing
 ```typescript
-// NxtScape.ts
+// Nemo.ts
 public async run(options: RunOptions) {
   if (this.executionContext.isChatMode()) {
     const chatAgent = new ChatAgent(this.executionContext)

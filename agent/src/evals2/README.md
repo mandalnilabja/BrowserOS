@@ -9,7 +9,7 @@ Evals2 is a lightweight evaluation system that tracks agent execution metrics an
 - **Lightweight Tool Tracking**: Simple Map-based duration tracking (no complex spans)
 - **4-Category Scoring**: Goal completion (40%), Plan correctness (30%), Error-free execution (15%), Context efficiency (15%)
 - **Session Management**: Maintains parent-child span relationships for Braintrust hierarchy
-- **Minimal Integration**: Only 2 hooks in existing code (BrowserAgent + NxtScape)
+- **Minimal Integration**: Only 2 hooks in existing code (BrowserAgent + Nemo)
 
 ## Usage
 
@@ -31,7 +31,7 @@ export BRAINTRUST_API_KEY=your-key  # Required for uploading scores
 ### Architecture
 
 ```
-NxtScape
+Nemo
   ├── SimpleBraintrustEventManager (session management)
   │   └── Creates parent span for conversation
   │

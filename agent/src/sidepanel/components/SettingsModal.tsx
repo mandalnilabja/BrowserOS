@@ -3,12 +3,10 @@ import { Button } from '@/sidepanel/components/ui/button'
 import { Slider } from './ui/slider'
 import { cn } from '@/sidepanel/lib/utils'
 import { z } from 'zod'
-import { X, HelpCircle, ExternalLink, Monitor } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useSettingsStore } from '@/sidepanel/stores/settingsStore'
 import { useSidePanelPortMessaging } from '@/sidepanel/hooks/useSidePanelPortMessaging'
 import { MessageType } from '@/lib/types/messaging'
-
-const DISCORD_URL = 'https://discord.com/invite/YKwjt5vuKr'
 
 // Define the props schema with Zod
 const SettingsModalPropsSchema = z.object({
@@ -31,12 +29,6 @@ export function SettingsModal({ isOpen, onClose, onOpenHelp }: SettingsModalProp
     setTheme(next)
   }
 
-  // Close modal when clicking outside
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose()
-    }
-  }
 
   // Close modal on escape key
   useEffect(() => {
@@ -54,7 +46,7 @@ export function SettingsModal({ isOpen, onClose, onOpenHelp }: SettingsModalProp
 
   // Load persisted glow setting and get version
   useEffect(() => {
-    const GLOW_ENABLED_KEY = 'nxtscape-glow-enabled'
+    const GLOW_ENABLED_KEY = 'Nemo-glow-enabled'
     try {
       chrome.storage?.local?.get(GLOW_ENABLED_KEY, (result) => {
         if (result && Object.prototype.hasOwnProperty.call(result, GLOW_ENABLED_KEY)) {
@@ -78,7 +70,7 @@ export function SettingsModal({ isOpen, onClose, onOpenHelp }: SettingsModalProp
 
   // Toggle glow
   const toggleGlow = () => {
-    const GLOW_ENABLED_KEY = 'nxtscape-glow-enabled'
+    const GLOW_ENABLED_KEY = 'Nemo-glow-enabled'
     const next = !glowEnabled
     setGlowEnabled(next)
     try {
@@ -108,13 +100,15 @@ export function SettingsModal({ isOpen, onClose, onOpenHelp }: SettingsModalProp
 
   return (
     <div 
-      className="fixed inset-0 z-[999] flex items-start justify-center bg-black/50 backdrop-blur-sm overflow-y-auto py-4"
-      onClick={handleBackdropClick}
+      className={cn(
+        "absolute top-full right-0 z-[999] transform transition-all duration-200",
+        isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+      )}
       role="dialog"
       aria-modal="true"
       aria-labelledby="settings-modal-title"
     >
-      <div className="bg-background border border-border rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4 mt-4 mb-4 animate-in zoom-in-95 duration-200">
+      <div className="bg-background border border-border rounded-2xl shadow-2xl p-6 w-80 max-h-[80vh] overflow-y-auto animate-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 id="settings-modal-title" className="text-lg font-semibold text-foreground">
@@ -247,52 +241,6 @@ export function SettingsModal({ isOpen, onClose, onOpenHelp }: SettingsModalProp
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>Small</span>
                 <span>Large</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Help section */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-medium text-foreground">Help & Support</h3>
-            <div className="p-4 rounded-xl bg-card border border-border/50">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground">Need help getting started?</p>
-                  <p className="text-xs text-muted-foreground mt-1">View examples, tips, and documentation</p>
-                </div>
-                <Button
-                  onClick={onOpenHelp}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2 rounded-lg"
-                  aria-label="Open help guide"
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  <span className="text-xs font-medium">Open Guide</span>
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* About section */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-medium text-foreground">About</h3>
-            <div className="p-4 rounded-xl bg-card border border-border/50">
-              <p className="text-sm text-muted-foreground">
-                Nemo Agentic Assistant v{agentVersion}
-              </p>
-              <div className="mt-3 flex items-center justify-between gap-3">
-                <p className="text-sm text-foreground">Have feedback or ideas? We'd love to hear from you.</p>
-                <a
-                  href={DISCORD_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open Discord to leave feedback"
-                >
-                  <Button size="sm" variant="outline" className="rounded-lg">
-                    Join Discord
-                  </Button>
-                </a>
               </div>
             </div>
           </div>

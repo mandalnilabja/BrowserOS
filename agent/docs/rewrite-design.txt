@@ -18,7 +18,7 @@ Keep content
 Delete all agents and create new agent/
 Question: what should the new agent structure look like?
 Keep browser/ as is – use the same APIs
-Delete NxtScape.ts and clean up all the unused code
+Delete Nemoclean up all the unused code
 Keep high level structure still the same so that you don’t have to change background/index.ts
 Keep existing runtime/MessageManager.ts 
 Create new tools
@@ -51,7 +51,7 @@ src/
 │   │   └── Utils.ts
 │   ├── config/
 │   ├── core/
-│   │   └── NxtScape.ts
+│   │   └── Nemo
 │   ├── dom/
 │   ├── events/
 │   ├── graph/
@@ -112,7 +112,7 @@ src/
 │   │   └── Utils.ts
 │   ├── config/
 │   ├── core/
-│   │   └── NxtScape.ts
+│   │   └── Nemo
 │   ├── dom/
 │   ├── events/
 │   ├── llm/

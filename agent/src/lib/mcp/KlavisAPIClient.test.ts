@@ -24,7 +24,7 @@ describe('KlavisAPIClient', () => {
   it('tests that client throws error when API key is empty', async () => {
     const emptyClient = new KlavisAPIClient('')
     
-    await expect(emptyClient.getUserInstances('user123', 'Nxtscape'))
+    await expect(emptyClient.getUserInstances('user123', 'Nemo'))
       .rejects
       .toThrow('Klavis API key not configured')
   })
@@ -41,10 +41,10 @@ describe('KlavisAPIClient', () => {
       json: async () => mockResponse
     })
     
-    const result = await client.getUserInstances('user123', 'Nxtscape')
+    const result = await client.getUserInstances('user123', 'Nemo')
     
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.klavis.ai/user/instances?user_id=user123&platform_name=Nxtscape',
+      'https://api.klavis.ai/user/instances?user_id=user123&platform_name=Nemo',
       expect.objectContaining({
         method: 'GET',
         headers: expect.objectContaining({
@@ -65,7 +65,7 @@ describe('KlavisAPIClient', () => {
       text: async () => 'Invalid API key'
     })
     
-    await expect(client.getUserInstances('user123', 'Nxtscape'))
+    await expect(client.getUserInstances('user123', 'Nemo'))
       .rejects
       .toThrow('Klavis API error: 401 Unauthorized')
   })

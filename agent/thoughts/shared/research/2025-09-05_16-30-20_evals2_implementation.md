@@ -95,7 +95,7 @@ The scoring weights are configured in [src/evals2/config.ts](src/evals2/config.t
 
 The evaluation flow follows this sequence:
 
-1. **Session Initialization** (NxtScape._initializeTelemetrySession)
+1. **Session Initialization** (Nemo._initializeTelemetrySession)
    - Checks if ENABLE_EVALS2 is true
    - Creates SimpleBraintrustEventManager singleton
    - Starts a parent session span for the conversation
@@ -105,7 +105,7 @@ The evaluation flow follows this sequence:
    - Metrics stored in ExecutionContext.toolMetrics Map
    - Tracks duration, success, errors per tool call
 
-3. **Message Processing & Scoring** (NxtScape.run after task completion)
+3. **Message Processing & Scoring** (Nemo.run after task completion)
    - SimplifiedScorer.scoreFromMessages extracts tool calls from message history
    - Combines toolMetrics Map data with message parsing
    - Calculates 4 dimension scores
@@ -114,7 +114,7 @@ The evaluation flow follows this sequence:
    - Scores uploaded to Braintrust with parent span reference
    - Session manager tracks scores for averaging
 
-5. **Session End** (NxtScape._endTelemetrySession)
+5. **Session End** (Nemo._endTelemetrySession)
    - Calculates average score across all tasks
    - Logs session summary to Braintrust
 
@@ -163,7 +163,7 @@ Results are collected at multiple levels:
    - Included in scoring calculations
 
 2. **Per-Task Scores**:
-   - Calculated after each task completion in NxtScape
+   - Calculated after each task completion in Nemo
    - Uploaded to Braintrust as `evals2_task_score` events
    - Added to session manager for averaging
 
@@ -186,7 +186,7 @@ The system requires minimal configuration:
    - `OPENAI_MODEL_FOR_SCORING` - Optional, defaults to gpt-4o-mini
 
 2. **Integration Points** (only 2 hooks):
-   - **NxtScape** ([src/lib/core/NxtScape.ts](src/lib/core/NxtScape.ts)):
+   - **Nemo** ([src/lib/core/Nemo.ts](src/lib/core/Nemo.ts)):
      - Session initialization at conversation start
      - Scoring after each task
      - Session end on cleanup
@@ -242,8 +242,8 @@ Key improvements:
 - `src/evals2/SimpleBraintrustLogger.ts:45-90` - Score upload logic
 
 ### Integration Points
-- `src/lib/core/NxtScape.ts:293-317` - Task scoring after execution
-- `src/lib/core/NxtScape.ts:378-413` - Session initialization
+- `src/lib/core/Nemo.ts:293-317` - Task scoring after execution
+- `src/lib/core/Nemo.ts:378-413` - Session initialization
 - `src/lib/agent/BrowserAgent.ts:341-344` - Tool wrapping
 - `src/lib/runtime/ExecutionContext.ts:60-65` - toolMetrics Map definition
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { z } from 'zod'
 import { Monitor, X, Pause, RefreshCw, HelpCircle, ExternalLink } from 'lucide-react'
+import { cn } from '@/sidepanel/lib/utils'
 
 // Props schema
 const HelpSectionPropsSchema = z.object({
@@ -76,12 +77,13 @@ export function HelpSection ({
 
      return (
      <div 
-       className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-4"
-       onClick={onClose}
+       className={cn(
+         "absolute top-full right-0 z-[999] transform transition-all duration-200",
+         isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+       )}
      >
        <div
-         className={`bg-background/95 backdrop-blur-sm border border-border/50 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto ${className || ''}`}
-         onClick={e => e.stopPropagation()}
+         className={`bg-background/95 backdrop-blur-sm border border-border/50 rounded-2xl shadow-2xl w-96 max-h-[80vh] overflow-y-auto ${className || ''}`}
        >
         {/* Header */}
          <div className="flex items-center justify-between p-5 border-b border-border/30">

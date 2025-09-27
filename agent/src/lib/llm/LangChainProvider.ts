@@ -93,7 +93,7 @@ export class LangChainProvider {
       // Otherwise determine based on provider type and model
       switch (provider.type) {
         case 'nemo':
-          // Nemo/Nxtscape uses gemini 2.5 flash by default
+          // Nemo/Nemo uses gemini 2.5 flash by default
           maxTokens = 1_000_000
           break
 

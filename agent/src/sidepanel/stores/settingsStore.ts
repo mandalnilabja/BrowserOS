@@ -77,7 +77,7 @@ export const useSettingsStore = create<Settings & SettingsActions>()(
       }
     }),
     {
-      name: 'nxtscape-settings',  // localStorage key
+      name: 'Nemo-settings',  // localStorage key
       version: 5,
       migrate: (persisted: any, version: number) => {
         // Migrate from v1 isDarkMode -> theme

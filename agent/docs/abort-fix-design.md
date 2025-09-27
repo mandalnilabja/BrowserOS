@@ -308,9 +308,9 @@ class ExecutionContext {
 }
 ```
 
-#### 3.1.5 NxtScape with State-Based Execution
+#### 3.1.5 Nemo with State-Based Execution
 ```typescript
-class NxtScape {
+class Nemo {
   async run(query: string) {
     try {
       // Set starting state
@@ -460,10 +460,10 @@ async function handleCancelTask() {
   // No need to manually update state here
 }
 
-// Background handler - just coordinates with NxtScape
+// Background handler - just coordinates with Nemo
 async function handleCancelTaskPort() {
-  // NxtScape.cancel() will handle state transitions internally
-  const result = await nxtScape.cancel()
+  // Nemo.cancel() will handle state transitions internally
+  const result = await Nemo.cancel()
   
   // ExecutionContext already transitioned state to ABORTED
   // UI will be notified via state broadcast
@@ -537,8 +537,8 @@ ExecutionContext {
   waitForState(target)       // Async state waiting
 }
 
-// NxtScape orchestrates high-level flow
-NxtScape {
+// Nemo orchestrates high-level flow
+Nemo {
   run() {
     context.setExecutionState(STARTING)
     // ... initialize ...

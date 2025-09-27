@@ -2,7 +2,7 @@
 
 ## 1. What Are We Trying to Do?
 
-The Sidepanel V2 project aims to completely redesign and reimplement the Nxtscape browser extension's side panel interface. Our objectives are:
+The Sidepanel V2 project aims to completely redesign and reimplement the Nemo browser extension's side panel interface. Our objectives are:
 
 ### Primary Goals
 1. **Simplify the Architecture**: Reduce the codebase by ~60% while maintaining all essential functionality
@@ -682,7 +682,7 @@ interface headerprops {
 export function header({ onreset, showreset, isprocessing }: headerprops) {
   return (
     <header classname="header">
-      <h1>nxtscape assistant</h1>
+      <h1>Nemo assistant</h1>
       
       <div classname="header-actions">
         {isprocessing && (
